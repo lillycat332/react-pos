@@ -26,6 +26,8 @@ import AddToCartFAB from './FAB.tsx';
 import ProductCard from './ProductItem.tsx';
 import Masonry from '@mui/lab/Masonry';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+// @ts-ignore
+import SalesPage from './SalesGraph.tsx';
 
 const drawerWidth = 240;
 
@@ -70,6 +72,8 @@ export default function MainView(props: { window: any; }) {
         return <ManagePage />;
       case "Cart":
         return <CartPage />;
+      case "Products":
+        return <SalesPage />;
       default:
         return <HomePage />;
     }
@@ -251,19 +255,14 @@ function UsersPage() {
       ))}
     </ul>
   );
+
+  function getUserCallback(callback: () => any) {
+    return callback();
+  }
 }
 
 async function getUsers() {
   const response = await fetch("http://localhost:8080/readUsers", { method: 'post' });
   const body = await response.text();
   return body as string;
-}
-
-function getUserCallback(getUsers: Function): Array<string> {
-  var result: Array<string>;
-  Promise.resolve(getUsers()).then(function (value) {
-    console.log(value);
-    result = value.split(", ")
-  });
-  return result
 }
