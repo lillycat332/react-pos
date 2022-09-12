@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -21,12 +22,14 @@ import LoginIcon from '@mui/icons-material/Login';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import Inventory2Icon from '@mui/icons-material/Inventory2';
 import AddToCartFAB from './FAB';
-import ProductCard from './ProductItem';
 import Masonry from '@mui/lab/Masonry';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import SalesPage from './SalesPage';
 
 const drawerWidth = 240;
+const CartPage    = React.lazy(() => import('./CartPage'))
+const SalesPage   = React.lazy(() => import('./SalesPage'))
+const UsersPage   = React.lazy(() => import('./UsersPage'))
+const ProductCard = React.lazy(() => import('./ProductCard'))
 
 export default function MainView(props: { window: any; }) {
   const { window } = props;
@@ -39,13 +42,18 @@ export default function MainView(props: { window: any; }) {
   const [Cart, setCart] = React.useState([]);
 
   const listItems = Products.map((Product) =>
-    <ProductCard name={Product[0] as string} price={Product[1] as number} imagePath="logo512.png" currency={currencyTypeCheck()} addToCart={() => console.log("helloworld")} />
+			<ProductCard name={Product[0] as string}
+									 price={Product[1] as number}
+									 imagePath="logo512.png"
+									 currency={currencyTypeCheck()}
+									 addToCart={() => console.log("helloworld")}
+			/>
   );
 
   const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
 
   React.useEffect(() => {
-    fetch("http://localhost:8080/readProducts")
+    fetch("http://localhost:3000/prods")
       .then(res => res.json())
       .then(
         (result) => {
@@ -58,21 +66,21 @@ export default function MainView(props: { window: any; }) {
           setUsers(r);
         });
   }, [])
-
+		
   function HandlePages() {
     switch (Page) {
       case "Home":
-        return <HomePage />;
+				return <Suspense><HomePage /></Suspense>;
       case "Users":
-        return <UsersPage />;
+				return <Suspense><UsersPage /></Suspense>;
       case "Manage":
-        return <ManagePage />;
+				return <Suspense><ManagePage /></Suspense>;
       case "Cart":
-        return <CartPage />;
+				return <Suspense><CartPage cart={Cart} currency={currencyTypeCheck()} /></Suspense>;
       case "Sales":
-        return <SalesPage />;
+				return <Suspense><SalesPage /></Suspense>;
       default:
-        return <HomePage />;
+        return <Suspense><HomePage /></Suspense>;
     }
   }
 
@@ -97,16 +105,6 @@ export default function MainView(props: { window: any; }) {
       >
         {listItems}
       </Masonry>
-    )
-  }
-
-  function CartPage() {
-    const cartItems = Cart.map((product) => {
-      return <ProductCard name={product} price={1} imagePath="logo512.png" currency={currencyTypeCheck()} addToCart={undefined} />;
-    }
-    );
-    return (
-      <ul>{cartItems}</ul>
     )
   }
 
@@ -230,36 +228,4 @@ export default function MainView(props: { window: any; }) {
       </Box>
     </Box>
   );
-}
-
-function UsersPage() {
-  const [UserArray, setUserArray] = React.useState([]);
-  setUserArray(getUserCallback(getUsers));
-  React.useEffect(() => {
-    fetch("http://localhost:8080/readUsers", { method: 'post' })
-      .then((response: { text: () => any; }) => response.text())
-      .then((data: any) => {
-        setUserArray(data);
-      })
-      .catch((err: any) => {
-        console.log(err);
-      });
-  }, [UserArray]);
-  return (
-    <ul>
-      {UserArray.map((item) => (
-        <li key={item.id}>{item.name}</li>
-      ))}
-    </ul>
-  );
-
-  function getUserCallback(callback: () => any) {
-    return callback();
-  }
-}
-
-async function getUsers() {
-  const response = await fetch("http://localhost:8080/readUsers", { method: 'post' });
-  const body = await response.text();
-  return body as string;
 }
