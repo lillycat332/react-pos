@@ -20,14 +20,11 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import LoginIcon from '@mui/icons-material/Login';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import Inventory2Icon from '@mui/icons-material/Inventory2';
-// @ts-ignore
-import AddToCartFAB from './FAB.tsx';
-// @ts-ignore
-import ProductCard from './ProductItem.tsx';
+import AddToCartFAB from './FAB';
+import ProductCard from './ProductItem';
 import Masonry from '@mui/lab/Masonry';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-// @ts-ignore
-import SalesPage from './SalesGraph.tsx';
+import SalesPage from './SalesPage';
 
 const drawerWidth = 240;
 
@@ -38,11 +35,11 @@ export default function MainView(props: { window: any; }) {
   const [Users, setUsers] = React.useState([]);
   const [currencyType, setCurrencyType] = React.useState('GBP');
   //const [Products, setProducts] = React.useState([]);
-  const Products = [['Banana', 1.0], ['Passionfruit', 2.0], ['Dragonfruit', 3.0], ['Strawberry', 4.0], ['Starfruit', 5.0], ['Mango', 6.0]];
+  const Products = [['Water', 1.0], ['Cola', 2.0], ['Lemonade', 2.0], ['Orange Juice', 1.5]];
   const [Cart, setCart] = React.useState([]);
 
   const listItems = Products.map((Product) =>
-    <ProductCard name={Product[0]} price={Product[1]} imagePath="logo512.png" currency={currencyTypeCheck()} addToCart={() => console.log("helloworld")} />
+    <ProductCard name={Product[0] as string} price={Product[1] as number} imagePath="logo512.png" currency={currencyTypeCheck()} addToCart={() => console.log("helloworld")} />
   );
 
   const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
@@ -72,7 +69,7 @@ export default function MainView(props: { window: any; }) {
         return <ManagePage />;
       case "Cart":
         return <CartPage />;
-      case "Products":
+      case "Sales":
         return <SalesPage />;
       default:
         return <HomePage />;
@@ -105,7 +102,7 @@ export default function MainView(props: { window: any; }) {
 
   function CartPage() {
     const cartItems = Cart.map((product) => {
-      return <ProductCard name={product} price={1} imagePath="logo512.png" currency={currencyTypeCheck()} />;
+      return <ProductCard name={product} price={1} imagePath="logo512.png" currency={currencyTypeCheck()} addToCart={undefined} />;
     }
     );
     return (
