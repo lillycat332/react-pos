@@ -26,13 +26,10 @@ import Masonry from '@mui/lab/Masonry';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 
 const drawerWidth = 240;
-const CartPage    = React.lazy(() => import('./CartPage'))
-const SalesPage   = React.lazy(() => import('./SalesPage'))
-const UsersPage   = React.lazy(() => import('./UsersPage'))
 const ProductCard = React.lazy(() => import('./ProductCard'))
 
 export default function MainView(props: { window: any; }) {
-  const { window } = props;
+	const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [Page, setPage] = React.useState("Home");
   const [Users, setUsers] = React.useState([]);
@@ -42,35 +39,59 @@ export default function MainView(props: { window: any; }) {
   const [Cart, setCart] = React.useState([]);
 
   const listItems = Products.map((Product) =>
-			<ProductCard name={Product[0] as string}
-									 price={Product[1] as number}
-									 imagePath="logo512.png"
-									 currency={currencyTypeCheck()}
-									 addToCart={() => console.log("helloworld")}
+			<ProductCard name      ={Product[0] as string}
+									 price     ={Product[1] as number}
+									 imagePath ="logo512.png"
+									 currency  ={currencyTypeCheck()}
+									 addToCart ={() => {console.log("helloworld")}}
 			/>
   );
 
   const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
 
   React.useEffect(() => {
-    fetch("http://localhost:3000/prods")
+    fetch("http://localhost:3000/prods/all")
       .then(res => res.json())
       .then(
         (result) => {
           console.log(result);
           var tmp = []
           for (var i in result)
-            tmp.push([i, result[i]]);
+            tmp.push(result[i]);
           var r = Object.entries(tmp);
           console.log(r);
           setUsers(r);
         });
   }, [])
 		
-  function HandlePages() {
-    switch (Page) {
-      case "Home":
-				return <Suspense><HomePage /></Suspense>;
+		function HandlePages() {
+			// Lazy load this stuff - saves on bundle size
+			const CartPage = React.lazy(() => import('./CartPage'))
+			const SalesPage = React.lazy(() => import('./SalesPage'))
+			const UsersPage = React.lazy(() => import('./UsersPage'))
+
+			const ManagePage = () => {
+			  return (
+					<FormControl size='small'>
+					  <InputLabel id="currency-select-label">Currency Type</InputLabel>
+					  <Select
+					  	labelId="currency-select-label"
+				  		id="currency-select"
+				  		value={currencyType}
+				  		label="Currency Type"
+					  	onChange={handleChangeCurrency}
+					  >
+						  <MenuItem value={"GBP"}>British Pounds</MenuItem>
+						  <MenuItem value={"USD"}>US Dollars</MenuItem>
+						  <MenuItem value={"EUR"}>Euros</MenuItem>
+					  </Select>
+				  </FormControl>
+				)
+			}
+				
+			switch (Page) {
+				case "Home":
+					return <Suspense><HomePage /></Suspense>;
       case "Users":
 				return <Suspense><UsersPage /></Suspense>;
       case "Manage":
@@ -105,25 +126,6 @@ export default function MainView(props: { window: any; }) {
       >
         {listItems}
       </Masonry>
-    )
-  }
-
-  function ManagePage() {
-    return (
-      <FormControl size='small'>
-        <InputLabel id="currency-select-label">Currency Type</InputLabel>
-        <Select
-          labelId="currency-select-label"
-          id="currency-select"
-          value={currencyType}
-          label="Currency Type"
-          onChange={handleChangeCurrency}
-        >
-          <MenuItem value={"GBP"}>British Pounds</MenuItem>
-          <MenuItem value={"USD"}>US Dollars</MenuItem>
-          <MenuItem value={"EUR"}>Euros</MenuItem>
-        </Select>
-      </FormControl>
     )
   }
 

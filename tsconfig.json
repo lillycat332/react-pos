@@ -6,6 +6,6 @@
     "target": "esnext",
     "jsx": "react",
     "allowJs": true,
-    "moduleResolution": "node",
+		"moduleResolution": "node",
   }
 }

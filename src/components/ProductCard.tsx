@@ -33,7 +33,7 @@ export default function ProductCard(props: ProductProps) {
       </CardContent>
       <CardActions>
 				{shouldShowButton
-				?	<Button size="small" onClick={() => this.addToCart}>Add to Cart</Button>
+				?	<Button size="small" onClick={props.addToCart()}>Add to Cart</Button>
 			  : null}
       </CardActions>
     </Card>
