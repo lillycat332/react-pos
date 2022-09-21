@@ -15,7 +15,7 @@ interface ProductProps {
 }
 
 export default function ProductCard(props: ProductProps) {
-	var shouldShowButton = typeof(props.addToCart) == 'function'
+  var shouldShowButton = typeof(props.addToCart) == 'function'
   return (
     <Card sx={{ minWidth: 275 }}>
       <CardMedia
@@ -32,9 +32,8 @@ export default function ProductCard(props: ProductProps) {
         </Typography>
       </CardContent>
       <CardActions>
-				{shouldShowButton
-				?	<Button size="small" onClick={props.addToCart()}>Add to Cart</Button>
-			  : null}
+	  {shouldShowButton ? <Button size="small" onClick=
+	      {props.addToCart()}>Add to Cart</Button> : null}
       </CardActions>
     </Card>
   );

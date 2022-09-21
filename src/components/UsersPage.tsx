@@ -2,27 +2,31 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 
 export default function UsersPage() {
-  const [UserArray, setUserArray] = useState([]);
+  const [Users, setUsers] = useState([]);
   useEffect(() => {
-			getUsers()
-					.then((data: any) => { setUserArray(data) })
-					.catch((err: any) => {
-							window.alert(`An error occured when I tried to get users.
+    const fetchUsers = async () => {
+      try {
+	const response = await fetch(`${global.window.location.href}users/all`,
+		    { method: 'get' });
+	const jsoned   = await response.json();
+	console.log(jsoned);
+	setUsers(jsoned);
+      }
+      catch (err) {
+	window.alert(`An error occured when I tried to get users.
 Please ensure the server is running.
-For advanced users: ${err}`)});
-  }, [UserArray]);
+For advanced users: ${err}`)
+      }
+    }
+    fetchUsers();
+  }, []);
   return (
     <ul>
-      {UserArray.map((item) => (
-        <li key={item.id}>{item.name}</li>
+      {Users.map((user) => (
+        <li key={user.cuser_id}>
+	    {user.cuser_name} - Privilege: {user.cuser_privilege}
+	</li>
       ))}
     </ul>
   );
-}
-
-async function getUsers() {
-  const response = await fetch("http://localhost:3000/users/",
-																 { method: 'get' });
-  const body = await response.text();
-  return body as unknown as [any];
 }

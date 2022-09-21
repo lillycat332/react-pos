@@ -21,7 +21,7 @@ import { ResponsiveLine, Serie } from '@nivo/line';
 
 async function getData(date: String, id: Number) {
     return JSON.stringify(
-        await fetch(`http://localhost:3000/sales/${date}/${id}`
+        await fetch(`${global.window.location.href}sales/${date}/${id}`
                     , { method: 'get' })
 	.then((response: { text: () => any; }) => response.text())
 	.then((data: any) => {return data}))
@@ -44,14 +44,14 @@ export default function SalePage() {
 export function SalesGraph(props: { id: number, date: string }) {
 		const [salesData, setSalesData] = React.useState([]);
     useEffect(() => {
-				const Data = getData(props.date, props.id)
-						.catch((reason) => {
-								window.alert
-(`An error occured when I tried to get the sales data.
+	const Data = getData(props.date, props.id)
+	    .catch((reason) => {
+		window.alert
+		(`An error occured when I tried to get the sales data.
 Please ensure the server is running
 For advanced users: ${reason}`);
-								return [{ 0: 0 }]})
-						.then((data) => setSalesData(
+		return [{ 0: 0 }]})
+	    .then((data) => setSalesData(
                 [JSON.stringify({ x: data, y: props.date, })]));
     }, [props.date]);
 

@@ -29,7 +29,7 @@ const drawerWidth = 240;
 const ProductCard = React.lazy(() => import('./ProductCard'))
 
 export default function MainView(props: { window: any; }) {
-	const { window } = props;
+  const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [Page, setPage] = React.useState("Home");
   const [Users, setUsers] = React.useState([]);
@@ -39,18 +39,18 @@ export default function MainView(props: { window: any; }) {
   const [Cart, setCart] = React.useState([]);
 
   const listItems = Products.map((Product) =>
-			<ProductCard name      ={Product[0] as string}
-									 price     ={Product[1] as number}
-									 imagePath ="logo512.png"
-									 currency  ={currencyTypeCheck()}
-									 addToCart ={() => {console.log("helloworld")}}
-			/>
+      <ProductCard name      ={Product[0] as string}
+		   price     ={Product[1] as number}
+		   imagePath ="logo512.png"
+		   currency  ={currencyTypeCheck()}
+		   addToCart ={() => {console.log("helloworld")}}
+      />
   );
 
   const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
 
   React.useEffect(() => {
-    fetch("http://localhost:3000/prods/all")
+    fetch(`${global.window.location.href}prods/all`)
       .then(res => res.json())
       .then(
         (result) => {
@@ -64,57 +64,57 @@ export default function MainView(props: { window: any; }) {
         });
   }, [])
 		
-		function HandlePages() {
-			// Lazy load this stuff - saves on bundle size
-			const CartPage = React.lazy(() => import('./CartPage'))
-			const SalesPage = React.lazy(() => import('./SalesPage'))
-			const UsersPage = React.lazy(() => import('./UsersPage'))
-
-			const ManagePage = () => {
-			  return (
-					<FormControl size='small'>
-					  <InputLabel id="currency-select-label">Currency Type</InputLabel>
-					  <Select
-					  	labelId="currency-select-label"
-				  		id="currency-select"
-				  		value={currencyType}
-				  		label="Currency Type"
-					  	onChange={handleChangeCurrency}
-					  >
-						  <MenuItem value={"GBP"}>British Pounds</MenuItem>
-						  <MenuItem value={"USD"}>US Dollars</MenuItem>
-						  <MenuItem value={"EUR"}>Euros</MenuItem>
-					  </Select>
-				  </FormControl>
-				)
-			}
-				
-			switch (Page) {
-				case "Home":
-					return <Suspense><HomePage /></Suspense>;
-      case "Users":
-				return <Suspense><UsersPage /></Suspense>;
-      case "Manage":
-				return <Suspense><ManagePage /></Suspense>;
-      case "Cart":
-				return <Suspense><CartPage cart={Cart} currency={currencyTypeCheck()} /></Suspense>;
-      case "Sales":
-				return <Suspense><SalesPage /></Suspense>;
-      default:
-        return <Suspense><HomePage /></Suspense>;
+    function HandlePages() {
+	// Lazy load this stuff - saves on bundle size
+	const CartPage = React.lazy( () => import('./CartPage'))
+	const SalesPage = React.lazy(() => import('./SalesPage'))
+	const UsersPage = React.lazy(() => import('./UsersPage'))
+	
+	const ManagePage = () => {
+	    return (
+		<FormControl size='small'>
+		  <InputLabel id="currency-select-label">Currency Type</InputLabel>
+		  <Select
+		      labelId="currency-select-label"
+		      id="currency-select"
+		      value={currencyType}
+		      label="Currency Type"
+		      onChange={handleChangeCurrency}
+		  >
+		    <MenuItem value={"GBP"}>British Pounds</MenuItem>
+		    <MenuItem value={"USD"}>US Dollars</MenuItem>
+		    <MenuItem value={"EUR"}>Euros</MenuItem>
+		  </Select>
+		</FormControl>
+	    )
+	}
+	
+	switch (Page) {
+	    case "Home":
+		return <Suspense><HomePage /></Suspense>;
+	    case "Users":
+		return <Suspense><UsersPage /></Suspense>;
+	    case "Manage":
+		return <Suspense><ManagePage /></Suspense>;
+	    case "Cart":
+		return <Suspense><CartPage cart={Cart} currency={currencyTypeCheck()} /></Suspense>;
+	    case "Sales":
+		return <Suspense><SalesPage /></Suspense>;
+	    default:
+		return <Suspense><HomePage /></Suspense>;
+	}
     }
-  }
-
+    
   function currencyTypeCheck() {
-    if (currencyType === 'USD') {
-      return '$';
-    } else if (currencyType === 'EUR') {
-      return '€';
-    } else if (currencyType === 'GBP') {
-      return '£';
-    }
+      if (currencyType === 'USD') {
+	  return '$';
+      } else if (currencyType === 'EUR') {
+	  return '€';
+      } else if (currencyType === 'GBP') {
+	  return '£';
+      }
   }
-
+    
   function HomePage() {
     return (
       <Masonry
