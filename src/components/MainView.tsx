@@ -13,42 +13,34 @@ import ListItemText from '@mui/material/ListItemText';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import HomeIcon from '@mui/icons-material/Home';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import PersonIcon from '@mui/icons-material/Person';
-import SettingsIcon from '@mui/icons-material/Settings';
-import LoginIcon from '@mui/icons-material/Login';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import Inventory2Icon from '@mui/icons-material/Inventory2';
-import FAB from './FAB';
 import Masonry from '@mui/lab/Masonry';
 import CartPage from './CartPage';
-import { ProductDisplay, Product } from '../types';
-import ProductPage from './ProductPage';
+import { ProductDisplay, Product, Currency, GBP } from '../types';
 import { fetchProds, makeSale, purge } from '../lib';
-import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 
 const drawerWidth = 240;
+// Lazy load all the pages and icons for performance reasons
 const ProductCard = React.lazy(() => import('./ProductCard'))
 const SalesPage = React.lazy(() => import('./SalesPage'))
 const UsersPage = React.lazy(() => import('./UsersPage'))
+const ProductPage = React.lazy(() => import('./ProductPage'))
 const Button = React.lazy(() => import('@mui/material/Button'));
 
-export default function MainView(props: { window: any; }) {
-	const { window } = props;
+const ShoppingCartIcon = React.lazy(() => import('@mui/icons-material/ShoppingCart'));
+const HomeIcon = React.lazy(() => import('@mui/icons-material/Home'));
+const AttachMoneyIcon = React.lazy(() => import('@mui/icons-material/AttachMoney'));
+const PersonIcon = React.lazy(() => import('@mui/icons-material/Person'));
+const SettingsIcon = React.lazy(() => import('@mui/icons-material/Settings'));
+const LoginIcon = React.lazy(() => import('@mui/icons-material/Login'));
+const ExitToAppIcon = React.lazy(() => import('@mui/icons-material/ExitToApp'));
+const Inventory2Icon = React.lazy(() => import('@mui/icons-material/Inventory2'));
+
+export default function MainView() {
 	const [mobileOpen, setMobileOpen] = React.useState(false);
 	const [Page, setPage] = React.useState("Home");
 	const [Users, setUsers] = React.useState([]);
-	const [currencyType, setCurrencyType] = React.useState('GBP');
+	const [currencyType, setCurrencyType] = React.useState({ kind: 'GBP', symbol: '£' } as GBP as Currency);
 	const [prods, setProds] = React.useState([]);
-
-	const Products: Product[] = [
-		{ product_id: 0, product_name: 'Water', product_price: 1.0 }
-		, { product_id: 1, product_name: 'Cola', product_price: 1.0 }
-		, { product_id: 2, product_name: 'Orange Juice', product_price: 1.0 }
-		, { product_id: 3, product_name: 'Apple Juice', product_price: 1.0 }];
-
 	const [Cart, setCart] = React.useState([]);
 
 	const addToCart = (prod: Product) => {
@@ -63,7 +55,11 @@ export default function MainView(props: { window: any; }) {
 	const emptyCart = () => { Cart.map((prod) => { makeSale(prod.p) }); setCart([]) }
 
 	const listItems = prods.map((product) => {
-		const prod: ProductDisplay = { p: product, handler: cartChanger, currency: currencyTypeCheck() }
+		const prod: ProductDisplay = {
+			p: product,
+			handler: cartChanger,
+			currency: currencyType.symbol
+		}
 		return (<ProductCard prod={prod} stateChanger={cartChanger} />)
 	});
 
@@ -89,7 +85,7 @@ export default function MainView(props: { window: any; }) {
 		const ManagePage = () => {
 			return (
 				<div>
-					<FormControl size='small'>
+					{/*<FormControl size='small'>
 						<InputLabel id="currency-select-label">Currency Type</InputLabel>
 						<Select
 							labelId="currency-select-label"
@@ -98,13 +94,12 @@ export default function MainView(props: { window: any; }) {
 							label="Currency Type"
 							onChange={handleChangeCurrency}
 						>
-							<MenuItem value={"GBP"}>British Pounds</MenuItem>
-							<MenuItem value={"USD"}>US Dollars</MenuItem>
-							<MenuItem value={"EUR"}>Euros</MenuItem>
+							<MenuItem value={{ kind: 'GBP', symbol: '£' } as GBP as Currency}>British Pounds</MenuItem>
+							<MenuItem value={{ kind: 'USD', symbol: '$' } as USD as Currency}>US Dollars</MenuItem>
+							<MenuItem value={{ kind: 'EUR', symbol: '€' } as EUR as Currency}>Euros</MenuItem>
 						</Select>
-					</FormControl>
-					<br/>
-					<Button onClick={purge} variant="contained" color="warning" style={{marginTop:"2%"}}>
+					</FormControl>*/}
+					<Button onClick={purge} variant="contained" color="warning" style={{ marginTop: "2%" }}>
 						Purge (FULLY WIPE) database
 					</Button>
 				</div>
@@ -119,23 +114,13 @@ export default function MainView(props: { window: any; }) {
 			case "Manage":
 				return <Suspense><ManagePage /></Suspense>;
 			case "Cart":
-				return <Suspense><CartPage cart={Cart} currency={currencyTypeCheck()} emptier={emptyCart} /></Suspense>;
+				return <Suspense><CartPage cart={Cart} currency={currencyType.symbol} emptier={emptyCart} /></Suspense>;
 			case "Sales":
 				return <Suspense><SalesPage /></Suspense>;
 			case "Products":
 				return <Suspense><ProductPage /></Suspense>;
 			default:
 				return <Suspense><HomePage /></Suspense>;
-		}
-	}
-
-	function currencyTypeCheck() {
-		if (currencyType === 'USD') {
-			return '$';
-		} else if (currencyType === 'EUR') {
-			return '€';
-		} else if (currencyType === 'GBP') {
-			return '£';
 		}
 	}
 
@@ -164,11 +149,13 @@ export default function MainView(props: { window: any; }) {
 			<List>
 				{['Home', 'Cart', 'Sales'].map((text, index) => (
 					<ListItem button key={text} onClick={() => setPage(text)}>
-						<ListItemIcon>
-							{index === 0 && <HomeIcon />}
-							{index === 1 && <ShoppingCartIcon />}
-							{index === 2 && <AttachMoneyIcon />}
-						</ListItemIcon>
+						<Suspense>
+							<ListItemIcon>
+								{index === 0 && <HomeIcon />}
+								{index === 1 && <ShoppingCartIcon />}
+								{index === 2 && <AttachMoneyIcon />}
+							</ListItemIcon>
+						</Suspense>
 						<ListItemText primary={text} />
 					</ListItem>
 				))}
@@ -177,21 +164,21 @@ export default function MainView(props: { window: any; }) {
 			<List>
 				{['Users', 'Products', 'Manage', 'Login', 'Logout'].map((text: string, index) => (
 					<ListItem button key={text} onClick={() => setPage(text)}>
-						<ListItemIcon>
-							{index === 0 && <PersonIcon />}
-							{index === 1 && <Inventory2Icon />}
-							{index === 2 && <SettingsIcon />}
-							{index === 3 && <LoginIcon />}
-							{index === 4 && <ExitToAppIcon />}
-						</ListItemIcon>
+						<Suspense>
+							<ListItemIcon>
+								{index === 0 && <PersonIcon />}
+								{index === 1 && <Inventory2Icon />}
+								{index === 2 && <SettingsIcon />}
+								{index === 3 && <LoginIcon />}
+								{index === 4 && <ExitToAppIcon />}
+							</ListItemIcon>
+						</Suspense>
 						<ListItemText primary={text} />
 					</ListItem>
 				))}
 			</List>
 		</div>
 	);
-
-	const container = window !== undefined ? () => window().document.body : undefined;
 
 	return (
 		<Box sx={{ display: 'flex' }}>
@@ -217,8 +204,7 @@ export default function MainView(props: { window: any; }) {
 			<Box component="nav" sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }} aria-label="mailbox folders">
 				{}
 				<Drawer
-					container={container}
-					variant="permanent"
+					variant="temporary"
 					open={mobileOpen}
 					onClose={handleDrawerToggle}
 					ModalProps={{

@@ -1,12 +1,11 @@
 import { Product } from './types';
 
 export async function sendObject<A extends {}>(toSend: A, location: string) {
-	const response = await fetch(`${global.window.location.href}${location}`,
+	await fetch(`${global.window.location.href}${location}`,
 		{
 			method: 'post',
 			body: JSON.stringify(toSend)
 		})
-	return response
 }
 
 export async function fetchProds(callback: (json: object) => void) {
@@ -20,7 +19,7 @@ export async function fetchProds(callback: (json: object) => void) {
 	catch (err) {
 		window.alert(`An error occured when I tried to get products.
 Please ensure the server is running.
-For advanced products: ${err}`)
+For advanced users: ${err}`)
 	}
 }
 

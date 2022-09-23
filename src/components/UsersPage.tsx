@@ -8,6 +8,9 @@ import TextField from '@mui/material/TextField';
 import Slider from '@mui/material/Slider';
 import { User, Product } from '../types';
 import { sendObject, fetchProds } from '../lib';
+import MUIDataTable from 'mui-datatables';
+import Fab from '@mui/material/Fab';
+import AddIcon from '@mui/icons-material/Add';
 
 const modalStyle = {
 	position: 'absolute' as 'absolute',
@@ -28,14 +31,17 @@ const userDefaults: User = {
 	user_privilege: 0
 }
 
+const userCols = [{ name: 'cuser_id', label: 'ID' },
+{ name: 'cuser_name', label: 'Name' },
+{ name: 'cuser_privilege', label: 'Privilege' }]
+
 // The page which shows a list of users and options to manage them.
 export default function UsersPage() {
-	const handleSubmit = async (event: any) => {
-		event.preventDefault();
-		await sendObject(formVal, "users");
-		handleOpen()
-		handleClose();
+	const handleSubmit = (event: any) => {
+			if (submit == true) { return 0 }
+			sendObject(formVal, "users");
 		setFormVal(userDefaults)
+		event.preventDefault();
 	};
 
 	const handleSliderChange = (name: string) => (e: any, value: number) => {
@@ -53,12 +59,13 @@ export default function UsersPage() {
 		});
 	};
 
-		const [open, setOpen] = React.useState(false);
+	const [open, setOpen] = React.useState(false);
 	const [formVal, setFormVal] = React.useState(userDefaults);
 	const handleOpen = () => setOpen(true);
 	const handleClose = () => setOpen(false);
 	const [Users, setUsers] = useState([]);
-
+	const [submit, setSubmit] = useState(false);
+		
 	useEffect(() => {
 		const fetchUsers = async () => {
 			try {
@@ -74,14 +81,11 @@ Please ensure the server is running.
 For advanced users: ${err}`)
 			}
 		}
-			fetchUsers();
+		fetchUsers();
 	}, []);
 
 	return (
 		<div>
-			<Button variant="contained" onClick={handleOpen}>
-				Add new user
-			</Button>
 			<Modal
 				open={open}
 				onClose={handleClose}
@@ -93,7 +97,7 @@ For advanced users: ${err}`)
 						ADD NEW USER
 					</Typography>
 					<div>
-						<form onSubmit={handleSubmit}>
+						<form onSubmit={(e) => {setSubmit(true); handleSubmit(e); setSubmit(false)}}>
 							<TextField id="name-input"
 								name="user_name"
 								label="Username"
@@ -141,13 +145,12 @@ For advanced users: ${err}`)
 					</div>
 				</Box >
 			</Modal >
-			<ul>
-				{Users.map((user) => (
-					<li key={user.cuser_id}>
-						{user.cuser_name} - Privilege: {user.cuser_privilege}
-					</li>
-				))}
-			</ul>
+			<MUIDataTable columns={userCols} data={Users} title="Users" />
+			<Box className="bottom-right" onClick={handleOpen}>
+				<Fab color="primary" aria-label="add-user">
+					<AddIcon/>
+				</Fab>
+			</Box>
 		</div >
 	);
 }

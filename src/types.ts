@@ -18,3 +18,16 @@ export type ProductDisplay = {
 	handler: Maybe<Function>
 	currency: String
 }
+
+export type GBP = {kind: 'GBP', symbol: '£'}
+export type EUR = {kind: 'EUR', symbol: '€'}
+export type USD = {kind: 'USD', symbol: '$'}
+
+export type Currency =
+    | GBP
+    | USD
+    | EUR
+
+const UserCols = [ { name: 'user_id', label: 'ID' },
+		   { name: 'user_name', label: 'Name' },
+		   { name: 'user_privilege', label: 'Privilege'} ]

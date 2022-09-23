@@ -7,6 +7,9 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import {sendObject, fetchProds} from '../lib';
 import { Product } from '../types';
+import MUIDataTable from 'mui-datatables';
+import Fab from '@mui/material/Fab';
+import AddIcon from '@mui/icons-material/Add';
 
 const modalStyle = {
 	position: 'absolute' as 'absolute',
@@ -26,13 +29,16 @@ const productDefaults: Product = {
 	product_price: 0
 }
 
+const prodCols = [{ name: 'product_id', label: 'ID' },
+{ name: 'product_name', label: 'Name' },
+{ name: 'product_price', label: 'Price' }]
+
 // The page which shows a list of products and options to manage them.
 export default function ProductPage() {
-	const handleSubmit = async (event: any) => {
+	const handleSubmit = (event: any) => {
 		event.preventDefault();
-		await sendObject(formVal, "prods");
-		handleOpen()
-		handleClose();
+		const obj = formVal
+		sendObject(obj, "prods");
 		setFormVal(productDefaults)
 	};
 
@@ -71,9 +77,6 @@ export default function ProductPage() {
 
 	return (
 		<div>
-			<Button variant="contained" onClick={handleOpen}>
-				Add new product
-			</Button>
 			<Modal
 				open={open}
 				onClose={handleClose}
@@ -87,21 +90,22 @@ export default function ProductPage() {
 					<div>
 						<form onSubmit={handleSubmit}>
 							<TextField
-									id="name-input"
+								id="name-input"
 								name="product_name"
 								label="Productname"
 								type="text" margin="dense"
 								variant="outlined"
 								value={formVal.product_name}
-							onChange={handleInputChange} />
-							
+								onChange={handleInputChange} />
+
 							<TextField id="price-input"
 								name="product_price"
-							inputProps={{ inputMode: 'numeric', pattern: '[0-9]*(.)?[0-9]*' }}
-							label="Price" margin="dense"
-							variant="outlined"
-							value={formVal.product_price}
+								type="number"
+								label="Price" margin="dense"
+								variant="outlined"
+								value={formVal.product_price}
 							onChange={handleInputNumericChange} />
+							<br/>
 							<Button variant="contained" color="primary" type="submit">
 								Submit
 							</Button>
@@ -109,13 +113,12 @@ export default function ProductPage() {
 					</div>
 				</Box >
 			</Modal >
-			<ul>
-				{prods.map((product) => (
-					<li key={product.product_id}>
-						{product.product_name} - Price: {product.product_price}
-					</li>
-				))}
-			</ul>
+			<MUIDataTable columns={prodCols} data={prods} title="Products" />
+			<Box className="bottom-right" onClick={handleOpen}>
+				<Fab color="primary" aria-label="add-user">
+					<AddIcon />
+				</Fab>
+			</Box>
 		</div >
 	);
 }
