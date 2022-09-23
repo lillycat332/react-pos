@@ -4,37 +4,30 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import { Typography } from '@mui/material';
-import CardMedia from '@mui/material/CardMedia';
+import { Product, ProductDisplay } from '../types.js';
 
-interface ProductProps {
-  name: string;
-  imagePath: string;
-  price: number;
-  currency: string;
-  addToCart: Function;
-}
-
-export default function ProductCard(props: ProductProps) {
-  var shouldShowButton = typeof(props.addToCart) == 'function'
-  return (
-    <Card sx={{ minWidth: 275 }}>
-      <CardMedia
-        component="img"
-        height="140"
-        image={props.imagePath}
-      />
-      <CardContent>
-        <Typography gutterBottom variant="h5" component="h2">
-          {props.name}
-        </Typography>
-        <Typography variant="body2" color="textSecondary" component="p">
-          {props.currency}{props.price}
-        </Typography>
-      </CardContent>
-      <CardActions>
-	  {shouldShowButton ? <Button size="small" onClick=
-	      {props.addToCart()}>Add to Cart</Button> : null}
-      </CardActions>
-    </Card>
-  );
+export default function ProductCard(props: { prod: ProductDisplay, stateChanger: Function}) {
+	const prod = props.prod
+	const shouldShowButton = typeof (props.stateChanger) == 'function'
+	const stateChanger = () => {props.stateChanger(prod)}
+	return (
+		<Card>
+			<CardContent>
+				<Typography gutterBottom
+					variant="h5"
+					component="h2">
+					{prod.p.product_name}
+				</Typography>
+				<Typography variant="body2"
+					color="textSecondary"
+					component="p">
+					{prod.currency}{prod.p.product_price}
+				</Typography>
+			</CardContent>
+			<CardActions>
+				{shouldShowButton ? <Button size="small" variant="contained" color="primary"
+					onClick={stateChanger}>Add to Cart</Button> : null}
+			</CardActions>
+		</Card>
+	);
 }

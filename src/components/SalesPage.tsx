@@ -19,17 +19,17 @@ import { ResponsiveLine, Serie } from '@nivo/line';
 // 	return x as number;
 // }
 
-async function getData(date: String, id: Number) {
+async function getData(date: {y: String, m: String}, id: Number) {
     return JSON.stringify(
-        await fetch(`${global.window.location.href}sales/${date}/${id}`
+        await fetch(`${global.window.location.href}sales/${date.y}/${date.m}/${id}`
                     , { method: 'get' })
 	.then((response: { text: () => any; }) => response.text())
 	.then((data: any) => {return data}))
 }
 
 export default function SalePage() {
-    const [date, setDate] = React.useState("2022-07");
-    const [id, setId] = React.useState(0);
+    const [date, setDate] = React.useState({y:"2022", m:"09"});
+    const [id, setId] = React.useState(1);
     
     return (
 	<div>
@@ -41,7 +41,7 @@ export default function SalePage() {
     );
 }
 
-export function SalesGraph(props: { id: number, date: string }) {
+export function SalesGraph(props: { id: number, date: {y: string, m: string}}) {
 		const [salesData, setSalesData] = React.useState([]);
     useEffect(() => {
 	const Data = getData(props.date, props.id)
@@ -52,7 +52,7 @@ Please ensure the server is running
 For advanced users: ${reason}`);
 		return [{ 0: 0 }]})
 	    .then((data) => setSalesData(
-                [JSON.stringify({ x: data, y: props.date, })]));
+                [{ x: data, y: props.date, }]));
     }, [props.date]);
 
     return (
