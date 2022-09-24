@@ -103,7 +103,7 @@ export default function ProductPage() {
 							<TextField
 								id="name-input"
 								name="product_name"
-								label="Productname"
+								label="Product Name"
 								type="text" margin="dense"
 								variant="outlined"
 								value={formVal.product_name}

@@ -52,10 +52,10 @@ export default function MainView() {
 		addToCart(newProd)
 	}
 
-		const emptyCart = () => {
-				Cart.map((prod) => { makeSale(prod.p) })
-				setCart([])
-		}
+	const emptyCart = () => {
+		Cart.map((prod) => { makeSale(prod.p) })
+		setCart([])
+	}
 
 	const listItems = prods.map((product) => {
 		const prod: ProductDisplay = {
@@ -67,7 +67,7 @@ export default function MainView() {
 	});
 
 	console.log(listItems);
-		
+
 	const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
 
 	React.useEffect(() => {
@@ -78,9 +78,11 @@ export default function MainView() {
 		const ManagePage = () => {
 			return (
 				<div>
-					<Button onClick={purge} variant="contained" color="warning" style={{ marginTop: "2%" }}>
-						Purge (FULLY WIPE) database
-					</Button>
+					<Suspense>
+						<Button onClick={purge} variant="contained" color="warning" style={{ marginTop: "2%" }}>
+							Purge (FULLY WIPE) database
+						</Button>
+					</Suspense>
 				</div>
 			)
 		}
