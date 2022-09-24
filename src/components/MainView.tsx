@@ -52,7 +52,10 @@ export default function MainView() {
 		addToCart(newProd)
 	}
 
-	const emptyCart = () => { Cart.map((prod) => { makeSale(prod.p) }); setCart([]) }
+		const emptyCart = () => {
+				Cart.map((prod) => { makeSale(prod.p) })
+				setCart([])
+		}
 
 	const listItems = prods.map((product) => {
 		const prod: ProductDisplay = {
@@ -63,21 +66,11 @@ export default function MainView() {
 		return (<ProductCard prod={prod} stateChanger={cartChanger} />)
 	});
 
+	console.log(listItems);
+		
 	const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
 
 	React.useEffect(() => {
-		fetch(`${global.window.location.href}prods/all`)
-			.then(res => res.json())
-			.then(
-				(result) => {
-					console.log(result);
-					var tmp = []
-					for (var i in result)
-						tmp.push(result[i]);
-					var r = Object.entries(tmp);
-					console.log(r);
-					setUsers(r);
-				});
 		fetchProds(setProds);
 	}, [])
 
@@ -85,20 +78,6 @@ export default function MainView() {
 		const ManagePage = () => {
 			return (
 				<div>
-					{/*<FormControl size='small'>
-						<InputLabel id="currency-select-label">Currency Type</InputLabel>
-						<Select
-							labelId="currency-select-label"
-							id="currency-select"
-							value={currencyType}
-							label="Currency Type"
-							onChange={handleChangeCurrency}
-						>
-							<MenuItem value={{ kind: 'GBP', symbol: '£' } as GBP as Currency}>British Pounds</MenuItem>
-							<MenuItem value={{ kind: 'USD', symbol: '$' } as USD as Currency}>US Dollars</MenuItem>
-							<MenuItem value={{ kind: 'EUR', symbol: '€' } as EUR as Currency}>Euros</MenuItem>
-						</Select>
-					</FormControl>*/}
 					<Button onClick={purge} variant="contained" color="warning" style={{ marginTop: "2%" }}>
 						Purge (FULLY WIPE) database
 					</Button>
@@ -132,8 +111,7 @@ export default function MainView() {
 				defaultHeight={450}
 				defaultColumns={4}
 				defaultSpacing={1}
-			>
-				{listItems}
+			>{listItems}
 			</Masonry>
 		);
 	}

@@ -5,7 +5,7 @@ import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
-import {sendObject, fetchProds} from '../lib';
+import { sendObject, fetchProds } from '../lib';
 import { Product } from '../types';
 import MUIDataTable from 'mui-datatables';
 import Fab from '@mui/material/Fab';
@@ -35,11 +35,22 @@ const prodCols = [{ name: 'product_id', label: 'ID' },
 
 // The page which shows a list of products and options to manage them.
 export default function ProductPage() {
-	const handleSubmit = (event: any) => {
+	const handleSubmit = async (event: React.FormEvent) => {
 		event.preventDefault();
-		const obj = formVal
-		sendObject(obj, "prods");
-		setFormVal(productDefaults)
+		event.stopPropagation()
+		try {
+			let response =
+				await fetch(`${global.window.location.href}prods`, {
+					method: 'post',
+					body: JSON.stringify(formVal)
+				})
+			let jsoned = await response.json()
+			if (response.status === 200) {
+				setFormVal(productDefaults)
+			}
+		} catch (err) {
+			console.log(err)
+		}
 	};
 
 	const handleSliderChange = (name: string) => (e: any, value: number) => {
@@ -85,7 +96,7 @@ export default function ProductPage() {
 			>
 				<Box sx={modalStyle}>
 					<Typography id="modal-modal-title" variant="h6" component="h2">
-						ADD NEW PRODUCT
+						Add New Product
 					</Typography>
 					<div>
 						<form onSubmit={handleSubmit}>
@@ -104,8 +115,8 @@ export default function ProductPage() {
 								label="Price" margin="dense"
 								variant="outlined"
 								value={formVal.product_price}
-							onChange={handleInputNumericChange} />
-							<br/>
+								onChange={handleInputNumericChange} />
+							<br />
 							<Button variant="contained" color="primary" type="submit">
 								Submit
 							</Button>
@@ -113,16 +124,26 @@ export default function ProductPage() {
 					</div>
 				</Box >
 			</Modal >
+			
 			<MUIDataTable columns={prodCols} data={prods} title="Products" />
 			<Box className="bottom-right" onClick={handleOpen}>
 				<Fab color="primary" aria-label="add-user">
 					<AddIcon />
 				</Fab>
 			</Box>
+
 		</div >
 	);
 }
 
 async function removeProduct(product: Product): Promise<void> {
-		
+
+}
+
+async function sendProd(toSend: Product, location: string) {
+	await fetch(`${global.window.location.href}${location}`,
+		{
+			method: 'post',
+			body: JSON.stringify(toSend)
+		})
 }
