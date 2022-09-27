@@ -24,17 +24,20 @@ const modalStyle = {
 };
 
 const productDefaults: Product = {
-	product_id: 0,
-	product_name: "",
-	product_price: 0
+	productId: 0,
+	productName: "",
+	productPrice: 0
 }
 
-const prodCols = [{ name: 'product_id', label: 'ID' },
-{ name: 'product_name', label: 'Name' },
-{ name: 'product_price', label: 'Price' }]
+const prodCols = [{ name: 'productId', label: 'ID' },
+{ name: 'productName', label: 'Name' },
+{ name: 'productPrice', label: 'Price' }]
 
 // The page which shows a list of products and options to manage them.
-export default function ProductPage() {
+export default function ProductPage(props: { setProds: (json: object) => void }) {
+	const [prods, setProds] = useState([])
+
+	const setBothProds = (prods: any[]) => { setProds(prods); props.setProds(prods) }
 	const handleSubmit = async (event: React.FormEvent) => {
 		event.preventDefault();
 		event.stopPropagation()
@@ -44,20 +47,22 @@ export default function ProductPage() {
 					method: 'post',
 					body: JSON.stringify(formVal)
 				})
-			let jsoned = await response.json()
 			if (response.status === 200) {
 				setFormVal(productDefaults)
 			}
+			else if (response.status === 400) {
+				throw 'Invalid product data was provided'
+			}
+			else {
+				throw 'Unknown error'
+			}
 		} catch (err) {
-			console.log(err)
+			window.alert(`An error occured when I tried to add product.
+Please ensure the server is running.
+For advanced users: ${err}`)
 		}
-	};
-
-	const handleSliderChange = (name: string) => (e: any, value: number) => {
-		setFormVal({
-			...formVal,
-			[name]: value,
-		});
+		fetchProds(setBothProds);
+		handleClose();
 	};
 
 	const handleInputChange = (e: any) => {
@@ -80,7 +85,6 @@ export default function ProductPage() {
 	const [formVal, setFormVal] = React.useState(productDefaults);
 	const handleOpen = () => setOpen(true);
 	const handleClose = () => setOpen(false);
-	const [prods, setProds] = useState([]);
 
 	useEffect(() => {
 		fetchProds(setProds);
@@ -102,19 +106,19 @@ export default function ProductPage() {
 						<form onSubmit={handleSubmit}>
 							<TextField
 								id="name-input"
-								name="product_name"
+								name="productName"
 								label="Product Name"
 								type="text" margin="dense"
 								variant="outlined"
-								value={formVal.product_name}
+								value={formVal.productName}
 								onChange={handleInputChange} />
 
 							<TextField id="price-input"
-								name="product_price"
+								name="productPrice"
 								type="number"
 								label="Price" margin="dense"
 								variant="outlined"
-								value={formVal.product_price}
+								value={formVal.productPrice}
 								onChange={handleInputNumericChange} />
 							<br />
 							<Button variant="contained" color="primary" type="submit">
@@ -124,14 +128,13 @@ export default function ProductPage() {
 					</div>
 				</Box >
 			</Modal >
-			
+
 			<MUIDataTable columns={prodCols} data={prods} title="Products" />
-			<Box className="bottom-right" onClick={handleOpen}>
+			<Box className="bottom-right" onClick={() => { setOpen(true) }}>
 				<Fab color="primary" aria-label="add-user">
 					<AddIcon />
 				</Fab>
 			</Box>
-
 		</div >
 	);
 }
@@ -141,9 +144,18 @@ async function removeProduct(product: Product): Promise<void> {
 }
 
 async function sendProd(toSend: Product, location: string) {
-	await fetch(`${global.window.location.href}${location}`,
-		{
-			method: 'post',
-			body: JSON.stringify(toSend)
-		})
+	try {
+		const response = await fetch(`${global.window.location.href}${location}`,
+			{
+				method: 'post',
+				body: JSON.stringify(toSend)
+			})
+		const code = response.status
+		if (code == 400) { throw 'Malformed Request - The data provided was not a valid product.' }
+	}
+	catch (err) {
+		window.alert(`An error occured when I tried to add product.
+Please ensure the server is running.
+For advanced users: ${err}`)
+	}
 }

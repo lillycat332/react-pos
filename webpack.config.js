@@ -34,7 +34,7 @@ module.exports = {
         'src/**/*.((j|t)s(x)?|css)',
       ],
       exclude: [
-        '**/*.(stories|spec).(js|jsx)',
+          '**/*.(stories|spec).((j|t)s|(j|t)sx)',
       ],
     }),
     //new WebpackShellPlugin({onBuildStart:['rm ../public/*.js'], onBuildEnd:['echo "Done."']})

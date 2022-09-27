@@ -4,6 +4,7 @@ import './index.css';
 import MainView from "./components/MainView";
 
 export default function App() {
+  document.title = "Triangle POS"
   return (
     <MainView />
   );

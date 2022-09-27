@@ -25,26 +25,26 @@ const modalStyle = {
 };
 
 const userDefaults: User = {
-	user_id: 0,
-	user_name: "",
-	user_password: "",
-	user_privilege: 0
+	userId: 0,
+	userName: "",
+	userPassword: "",
+	userPrivilege: 0
 }
 
-const userCols = [{ name: 'cuser_id', label: 'ID' },
-{ name: 'cuser_name', label: 'Name' },
-{ name: 'cuser_privilege', label: 'Privilege' }]
+const userCols = [{ name: 'cuserId', label: 'ID' },
+{ name: 'cuserName', label: 'Name' },
+{ name: 'cuserPrivilege', label: 'Privilege' }]
 
 // The page which shows a list of users and options to manage them.
-export default function UsersPage() {
+export default function UsersPage(props: {priv: number}) {
+	if (props.priv < 2) { console.log("privilege: " + props.priv);return null }
 	const handleSubmit = (event: any) => {
-			if (submit == true) { return 0 }
-			sendObject(formVal, "users");
+		sendObject(formVal, "users");
 		setFormVal(userDefaults)
 		event.preventDefault();
 	};
 
-	const handleSliderChange = (name: string) => (e: any, value: number) => {
+		const handleSliderChange = (name: string) => (e: any, value: number) => {
 		setFormVal({
 			...formVal,
 			[name]: value,
@@ -61,10 +61,9 @@ export default function UsersPage() {
 
 	const [open, setOpen] = React.useState(false);
 	const [formVal, setFormVal] = React.useState(userDefaults);
-	const handleOpen = () => setOpen(true);
+	const handleOpen  = () => setOpen(true);
 	const handleClose = () => setOpen(false);
 	const [Users, setUsers] = useState([]);
-	const [submit, setSubmit] = useState(false);
 		
 	useEffect(() => {
 		const fetchUsers = async () => {
@@ -97,26 +96,26 @@ For advanced users: ${err}`)
 						ADD NEW USER
 					</Typography>
 					<div>
-						<form onSubmit={(e) => {setSubmit(true); handleSubmit(e); setSubmit(false)}}>
+						<form onSubmit={handleSubmit}>
 							<TextField id="name-input"
-								name="user_name"
+								name="userName"
 								label="Username"
 								type="text" margin="dense"
 								variant="outlined"
-								value={formVal.user_name}
+								value={formVal.userName}
 								onChange={handleInputChange} />
 							<TextField id="pw-input"
-								name="user_password"
+								name="userPassword"
 								type='text'
 								label="Password" margin="dense"
 								variant="outlined"
-								value={formVal.user_password}
+								value={formVal.userPassword}
 								onChange={handleInputChange} />
 							<div>
 								Privilege
 								<Slider
-									value={formVal.user_privilege}
-									onChange={handleSliderChange("user_privilege")}
+									value={formVal.userPrivilege}
+									onChange={handleSliderChange("userPrivilege")}
 									defaultValue={1}
 									step={1}
 									min={1}

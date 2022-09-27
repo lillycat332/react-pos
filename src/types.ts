@@ -1,22 +1,36 @@
 export type User = {
-	user_id: number,
-	user_name: string,
-	user_password: string,
-	user_privilege: number
+	userId: number,
+	userName: string,
+	userPassword: string,
+	userPrivilege: number
+}
+
+export type CensoredUser = {
+	cuserId: number,
+	cuserName: string,
+	cuserPrivilege: number
 }
 
 export type Product = {
-	product_id: number,
-	product_name: string,
-	product_price: number,
+	productId: number,
+	productName: string,
+	productPrice: number,
 }
 
-export type Maybe<T> = T | undefined
+const Nothing = Symbol('nothing');
+export type Nothing = typeof Nothing;
+export type Maybe<T> = T | Nothing
 
 export type ProductDisplay = {
 	p: Product
 	handler: Maybe<Function>
 	currency: String
+}
+
+export type SessionToken = {
+		sessionUUID: String
+		sessionUser: CensoredUser
+		sessionHash: String
 }
 
 export type GBP = {kind: 'GBP', symbol: '£'}
@@ -28,6 +42,9 @@ export type Currency =
     | USD
     | EUR
 
-const UserCols = [ { name: 'user_id', label: 'ID' },
-		   { name: 'user_name', label: 'Name' },
-		   { name: 'user_privilege', label: 'Privilege'} ]
+export type LoginRequest = { requestName: string
+											, requestPass: string }
+
+const UserCols = [ { name: 'userId'        , label: 'ID' }
+								 , { name: 'userName'      , label: 'Name' }
+								 , { name: 'userPrivilege' , label: 'Privilege'} ]

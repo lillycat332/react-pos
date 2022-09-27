@@ -16,12 +16,12 @@ export default function ProductCard(props: { prod: ProductDisplay, stateChanger:
 				<Typography gutterBottom
 					variant="h5"
 					component="h2">
-					{prod.p.product_name}
+					{prod.p.productName}
 				</Typography>
 				<Typography variant="body2"
 					color="textSecondary"
 					component="p">
-					{prod.currency}{prod.p.product_price}
+					{prod.currency}{prod.p.productPrice}
 				</Typography>
 			</CardContent>
 			<CardActions>

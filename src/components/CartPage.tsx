@@ -7,7 +7,7 @@ const Button = React.lazy(() => import('@mui/material/Button'))
 
 export default function CartPage(props: { cart: ProductDisplay[], currency: string, emptier: Function }) {
 	const total = () => {
-		let cartPrices = props.cart.map((prod) => prod.p.product_price);
+		let cartPrices = props.cart.map((prod) => prod.p.productPrice);
 		return cartPrices.reduce((cur, prev) => { return cur + prev })
 	}
 
@@ -21,8 +21,8 @@ export default function CartPage(props: { cart: ProductDisplay[], currency: stri
 				<ul>
 					{props.cart.map((prod) => {
 						console.log(prod); return (
-							<li key={prod.p.product_id}>
-								{prod.p.product_name} - {props.currency}{prod.p.product_price}
+							<li key={prod.p.productId}>
+								{prod.p.productName} - {props.currency}{prod.p.productPrice}
 							</li>
 						)
 					})}
