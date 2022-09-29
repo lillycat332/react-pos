@@ -4,12 +4,12 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import { Typography } from '@mui/material';
-import { Product, ProductDisplay } from '../types.js';
+import { ProductDisplay } from '../types.js';
 
-export default function ProductCard(props: { prod: ProductDisplay, stateChanger: Function}) {
+export default function ProductCard(props: { prod: ProductDisplay, stateChanger: Function }) {
 	const prod = props.prod
 	const shouldShowButton = typeof (props.stateChanger) == 'function'
-	const stateChanger = () => {props.stateChanger(prod)}
+	const stateChanger = () => { props.stateChanger(prod) }
 	return (
 		<Card>
 			<CardContent>

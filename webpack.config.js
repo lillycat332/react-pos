@@ -1,6 +1,5 @@
 const path = require('path');
 const DeadCodePlugin = require('webpack-deadcode-plugin');
-const WebpackShellPlugin = require('webpack-shell-plugin');
 
 module.exports = {
   entry: './src/index.tsx',

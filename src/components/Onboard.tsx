@@ -5,12 +5,12 @@ import { Button } from '@mui/material';
 import { TextField } from '@mui/material';
 import { motion } from 'framer-motion';
 import centeredBox from '../styles'
-import modalStyle from '../styles';
 import { User } from '../types';
 import { sendObject } from '../lib';
+import Tilt from 'react-parallax-tilt';
 
 const MotionBox = motion(Box)
-
+const MotionButton = motion(Button)
 const userDefaults: User = {
 	userId: 0,
 	userName: "",
@@ -25,15 +25,8 @@ export default function Onboard() {
 	const handleSubmit = (event: any) => {
 		sendObject(formVal, "users");
 		setFormVal(userDefaults)
-			event.preventDefault();
-			window.location.reload()
-	};
-
-	const handleSliderChange = (name: string) => (e: any, value: number) => {
-		setFormVal({
-			...formVal,
-			[name]: value,
-		});
+		event.preventDefault();
+		setPage('done')
 	};
 
 	const handleInputChange = (e: any) => {
@@ -49,51 +42,86 @@ export default function Onboard() {
 			sx={centeredBox}
 			initial={{ x: "-300px", opacity: 0 }}
 			animate={{ x: 0, opacity: 1 }}
+			transition={{ type: 'spring', stiffness: 100 }}
 		>
 			{page === 'initial' && (
 				<Box>
-					<Typography>
-						Welcome! Let's get you set up.
+					<Typography id="welcome-text" variant="h4">
+						Welcome. Let's get you set up.
 					</Typography>
-					<Button>
+					<MotionButton
+						onClick={_ => setPage('createUser')}
+						initial={{ scale: 1 }}
+						whileHover={{ scale: 1.25 }}
+					>
 						Next ➡️
-					</Button>
+					</MotionButton>
 				</Box>
 			)}
 
 			{page === 'createUser' && (
-				<Box>
-					<Typography variant="h6">
+				<MotionBox
+					initial={{ x: "-300px", opacity: 0 }}
+					animate={{ x: 0, opacity: 1 }}
+					transition={{ type: 'spring', stiffness: 100 }}>
+					<Typography id="add-admin-title" variant="h6">
 						Let's create your admin account.
-					</Typography>
-					<Typography id="modal-modal-title" variant="h6" component="h2">
-						ADD NEW USER
 					</Typography>
 					<div>
 						<form onSubmit={handleSubmit}>
 							<TextField id="name-input"
 								name="userName"
 								label="Username"
+								sx={{ margin: '2%' }}
 								type="text" margin="dense"
 								variant="outlined"
 								value={formVal.userName}
 								onChange={handleInputChange} />
 							<TextField id="pw-input"
+								sx={{ margin: '2%' }}
 								name="userPassword"
 								type='text'
 								label="Password" margin="dense"
 								variant="outlined"
 								value={formVal.userPassword}
 								onChange={handleInputChange} />
-							<Typography>
-								You can create users of lower privilige later.
+							<Typography sx={{ margin: '2%' }}>
+								You can create users of lower privilege later. <br />
+								Make sure you remember your password!
 							</Typography>
-							<Button variant="contained" color="primary" type="submit">
-								Submit
-							</Button>
+							<Tilt>
+								<MotionButton
+									variant="contained"
+									color="primary"
+									type="submit"
+									initial={{ scale: 1 }}
+									whileHover={{ scale: 1.25 }}
+								>
+									Submit
+								</MotionButton>
+							</Tilt>
 						</form>
 					</div>
-				</Box >
+				</MotionBox >
+			)}
+
+			{page === 'done' && (
+				<MotionBox
+					initial={{ x: "-300px", opacity: 0 }}
+					animate={{ x: 0, opacity: 1 }}
+					transition={{ type: 'spring', stiffness: 100 }}
+				>
+					<Typography id="add-admin-title" variant="h6">
+						And that's everything you need to get started!
+					</Typography>
+					<MotionButton
+						onClick={_ => window.location.reload()}
+						initial={{ scale: 1 }}
+						whileHover={{ scale: 1.25 }}
+					>
+						Proceed to login ➡️
+					</MotionButton>
+				</MotionBox>
 			)}
 		</MotionBox>
 	);

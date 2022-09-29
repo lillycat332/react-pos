@@ -6,8 +6,8 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Slider from '@mui/material/Slider';
-import { User, Product } from '../types';
-import { sendObject, fetchProds } from '../lib';
+import { User } from '../types';
+import { sendObject, fetchUsers } from '../lib';
 import MUIDataTable from 'mui-datatables';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
@@ -28,23 +28,46 @@ const userDefaults: User = {
 	userId: 0,
 	userName: "",
 	userPassword: "",
-	userPrivilege: 0
+	userPrivilege: 1
 }
 
 const userCols = [{ name: 'cuserId', label: 'ID' },
 { name: 'cuserName', label: 'Name' },
 { name: 'cuserPrivilege', label: 'Privilege' }]
 
-// The page which shows a list of users and options to manage them.
-export default function UsersPage(props: {priv: number}) {
-	if (props.priv < 2) { console.log("privilege: " + props.priv);return null }
-	const handleSubmit = (event: any) => {
-		sendObject(formVal, "users");
-		setFormVal(userDefaults)
+/**
+ * The page which shows a list of users and options to manage them.
+ * @param props.priv - Privilege level of the user. Used to determine what options are available. 
+ */
+export default function UsersPage(props: { priv: number }) {
+	const handleSubmit = async (event: React.FormEvent) => {
 		event.preventDefault();
+		event.stopPropagation()
+		try {
+			let response =
+				await fetch(`${global.window.location.href}users`, {
+					method: 'post',
+					body: JSON.stringify(formVal)
+				})
+			if (response.status === 200) {
+				setFormVal(userDefaults)
+			} else if (response.status === 400) {
+				const invalidData = 'Invalid user data was provided';
+				throw invalidData
+			} else {
+				const unknownError = 'Unknown error';
+				throw unknownError
+			}
+		} catch (err) {
+			window.alert(`An error occured when I tried to add product.
+Please ensure the server is running.
+For advanced users: ${err}`)
+		}
+		fetchUsers(setUsers);
+		handleClose();
 	};
 
-		const handleSliderChange = (name: string) => (e: any, value: number) => {
+	const handleSliderChange = (name: string) => (e: any, value: number) => {
 		setFormVal({
 			...formVal,
 			[name]: value,
@@ -61,27 +84,16 @@ export default function UsersPage(props: {priv: number}) {
 
 	const [open, setOpen] = React.useState(false);
 	const [formVal, setFormVal] = React.useState(userDefaults);
-	const handleOpen  = () => setOpen(true);
+	const handleOpen = () => setOpen(true);
 	const handleClose = () => setOpen(false);
 	const [Users, setUsers] = useState([]);
-		
+
 	useEffect(() => {
-		const fetchUsers = async () => {
-			try {
-				const response = await fetch(`${global.window.location.href}users/all`,
-					{ method: 'get' });
-				const jsoned = await response.json();
-				console.log(jsoned);
-				setUsers(jsoned);
-			}
-			catch (err) {
-				window.alert(`An error occured when I tried to get users.
-Please ensure the server is running.
-For advanced users: ${err}`)
-			}
-		}
-		fetchUsers();
+		fetchUsers(setUsers);
 	}, []);
+
+	// If the user is not a supervisor or admin, show a blank page. 
+	if (props.priv < 2) { console.log("privilege: " + props.priv); return null }
 
 	return (
 		<div>
@@ -144,10 +156,20 @@ For advanced users: ${err}`)
 					</div>
 				</Box >
 			</Modal >
-			<MUIDataTable columns={userCols} data={Users} title="Users" />
+			<MUIDataTable
+				columns={userCols}
+				data={Users}
+				options={{
+					onRowsDelete: (rowsDeleted: any) => {
+						rowsDeleted.data.forEach((row: any) => {
+							fetch(`${global.window.location.href}users/${Users[row.index].cuserId}`, { method: 'delete' });
+						})
+					}
+				}}
+				title="Users" />
 			<Box className="bottom-right" onClick={handleOpen}>
 				<Fab color="primary" aria-label="add-user">
-					<AddIcon/>
+					<AddIcon />
 				</Fab>
 			</Box>
 		</div >
