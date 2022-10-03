@@ -19,15 +19,44 @@ export type Product = {
 	productPrice: number,
 }
 
-const Nothing = Symbol('nothing');
-// Because it will NOT shut up about this irrelevant redeclaration error
+export type ProductSale = {
+	saleProduct: Product,
+	saleDate: Date | string,
+	saleQuantity: number,
+}
+
+export enum MaybeType {
+	Just = 'maybe-type__just',
+	Nothing = 'maybe-type__nothing',
+}
+
+export interface Just<T> {
+	type: typeof MaybeType.Just
+	value: T
+}
+
+export interface Nothing {
+	type: typeof MaybeType.Nothing
+}
+
+export type Maybe<T>
+	= Just<T>
+	| Nothing
+
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export type Nothing = typeof Nothing;
-export type Maybe<T> = T | Nothing
+const Nothing = (): Nothing => ({
+	type: MaybeType.Nothing,
+})
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+const Just = <T>(value: T): Just<T> => ({
+	type: MaybeType.Just,
+	value,
+})
 
 export type ProductDisplay = {
 	p: Product
-	handler: Maybe<Function>
+	handler: Function | undefined
 	currency: String
 }
 

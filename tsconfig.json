@@ -5,6 +5,7 @@
     "module": "esnext",
     "target": "esnext",
     "jsx": "react",
+    "forceConsistentCasingInFileNames": true,
     "allowJs": true,
     "moduleResolution": "node",
   }

@@ -1,12 +1,19 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import {
+	useEffect
+	, useState
+} from 'react';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
-import { fetchProds } from '../lib';
-import { Product, ProductWithStock } from '../types';
+import {
+	fetchProds
+} from '../lib';
+import {
+	Product
+} from '../types';
 import MUIDataTable from 'mui-datatables';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
@@ -27,31 +34,6 @@ const productDefaults: Product = {
 	productId: 0,
 	productName: "",
 	productPrice: 0
-}
-
-/**
-* Fetches the stock data for a given product, adds it to the product object 
-* and returns it
-* @param prod - a Product
-* @returns - a Promise<ProductWithStock>, a Product with the stock data added
-*/
-async function getStockData(prod: Product): Promise<ProductWithStock> {
-	return await fetch(`${window.location.href}/stock/${prod.productId}`)
-		.then(data => data.json() as unknown as number)
-		.then(data => addStockData(prod, data))
-}
-
-/**
-* Add stock data to a product object.
-* @param prod - a Product
-* @param stock - a number, the stock data to add to the product
-* @returns - a ProductWithStock, a Product with the stock data added
-*/
-function addStockData(prod: Product, stock: number): ProductWithStock {
-	return {
-		prod: prod,
-		pInStock: stock
-	}
 }
 
 const prodCols = [
@@ -109,7 +91,6 @@ For advanced users: ${err}`)
 
 	const [open, setOpen] = React.useState(false);
 	const [formVal, setFormVal] = React.useState(productDefaults);
-	const handleOpen = () => setOpen(true);
 	const handleClose = () => setOpen(false);
 
 	useEffect(() => {
@@ -191,29 +172,6 @@ async function removeProduct(product: Product, callback: (json: object) => void)
 		}
 	} catch (err) {
 		window.alert(`An error occured when I tried to remove that product.
-Please ensure the server is running.
-For advanced users: ${err}`)
-	}
-}
-
-const MalformedProd = 'Malformed Request - The data provided was not a valid product.';
-/**
- * Sends a request to the server to add a product.
- * @param toSend The product to send to the server
- * @param location The endpoint to send the product to (e.g. /prods)
- */
-async function sendProd(toSend: Product, location: string): Promise<void> {
-	try {
-		const response = await fetch(`${global.window.location.href}${location}`,
-			{
-				method: 'post',
-				body: JSON.stringify(toSend)
-			})
-		const code = response.status
-		if (code === 400) { throw MalformedProd }
-	}
-	catch (err) {
-		window.alert(`An error occured when I tried to add product.
 Please ensure the server is running.
 For advanced users: ${err}`)
 	}

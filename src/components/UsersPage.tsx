@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Slider from '@mui/material/Slider';
 import { User } from '../types';
-import { sendObject, fetchUsers } from '../lib';
+import { fetchUsers } from '../lib';
 import MUIDataTable from 'mui-datatables';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
@@ -93,7 +93,7 @@ For advanced users: ${err}`)
 	}, []);
 
 	// If the user is not a supervisor or admin, show a blank page. 
-	if (props.priv < 2) { console.log("privilege: " + props.priv); return null }
+	if (props.priv < 2) { console.error("privilege too low: " + props.priv); return null }
 
 	return (
 		<div>
@@ -167,20 +167,11 @@ For advanced users: ${err}`)
 					}
 				}}
 				title="Users" />
-			<Box className="bottom-right" onClick={handleOpen}>
+			<Box onClick={handleOpen} sx={{ position: 'fixed', bottom: 0, right: 0, margin: '2%' }}>
 				<Fab color="primary" aria-label="add-user">
 					<AddIcon />
 				</Fab>
 			</Box>
 		</div >
 	);
-}
-
-async function sendUser(user: User) {
-	const response = await fetch(`${global.window.location.href}users`,
-		{
-			method: 'post',
-			body: JSON.stringify(user)
-		})
-	return response
 }

@@ -1,0 +1,19 @@
+[12:55:57.003] Global cache location '/Users/lillycham/Library/Caches/typescript/4.8', safe file path '/users/lillycham/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/typingsafelist.json', types map path /users/lillycham/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/typesmap.json
+[12:55:57.004] Processing cache location '/Users/lillycham/Library/Caches/typescript/4.8'
+[12:55:57.004] Trying to find '/Users/lillycham/Library/Caches/typescript/4.8/package.json'...
+[12:55:57.006] Loaded content of '/Users/lillycham/Library/Caches/typescript/4.8/package.json': {"private":true,"dependencies":{"types-registry":"^0.1.609"}}
+[12:55:57.006] Loaded content of '/Users/lillycham/Library/Caches/typescript/4.8/package-lock.json'
+[12:55:57.006] Finished processing cache location '/Users/lillycham/Library/Caches/typescript/4.8'
+[12:55:57.006] Process id: 14280
+[12:55:57.006] NPM location: /usr/local/bin/npm (explicit '--npmLocation' not  provided)
+[12:55:57.006] validateDefaultNpmLocation: false
+[12:55:57.006] Npm config file: /Users/lillycham/Library/Caches/typescript/4.8/package.json
+[12:55:57.006] Updating types-registry npm package...
+[12:55:57.007] Exec: /usr/local/bin/npm install --ignore-scripts types-registry@latest
+[12:56:00.232]     Succeeded. stdout:
+    + types-registry@0.1.610
+    updated 1 package and audited 1 package in 2.582s
+found 0 vulnerabilities
+
+
+[12:56:00.232] Updated types-registry npm package

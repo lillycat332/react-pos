@@ -5,7 +5,6 @@ import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
-import { fetchProds } from '../lib';
 import { Product, ProductWithStock } from '../types';
 import MUIDataTable from 'mui-datatables';
 import Fab from '@mui/material/Fab';
@@ -31,11 +30,7 @@ const productDefaults: Product = {
 }
 
 const productWithStockDefaults: ProductWithStock = {
-	prod: {
-		productId: 0,
-		productName: '',
-		productPrice: 0
-	},
+	prod: productDefaults,
 	pInStock: 0,
 }
 
@@ -150,7 +145,6 @@ export default function StockPage() {
 			>
 				<EditStockModal onSubmit={(e, prod) => {
 					e.preventDefault();
-					console.log(e);
 					fetch(`${global.window.location.href}stock/${prod.prod.productId}/${prod.pInStock}`, {
 						method: 'put'
 					})

@@ -1,4 +1,12 @@
-import { Product, SessionToken, LoginRequest, User } from './types';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import {
+	Product
+	, SessionToken
+	, LoginRequest
+	, User
+	, ProductWithStock
+	, ProductSale
+} from './types';
 
 /**
  * Sends any object to the server.
@@ -30,16 +38,105 @@ For advanced users: ${err}`)
 	}
 }
 
+export async function sendUser(user: User) {
+	const response = await fetch(`${global.window.location.href}users`,
+		{
+			method: 'post',
+			body: JSON.stringify(user)
+		})
+	return response
+}
+
+
 /**
  * Make a sale, sending the sale to the server.
  * @param prod - the product to sell
  */
 export async function makeSale(prod: Product) {
 	const d = new Date()
+	const offset = d.getTimezoneOffset()
+	// Hack to work around the fact that JS automatically converts dates to UTC.
+	// (thanks Brendan Eich -_-)
+	const d2 = new Date(d.getTime() - (offset * 60 * 1000))
+	const sale: ProductSale = {
+		saleProduct: prod,
+		saleDate: d.toISOString().split('T')[0],
+		saleQuantity: 1
+	}
+
 	await fetch(
-		`${global.window.location.href}sales/${d.getFullYear()}/${d.getMonth()}/${d.getDay()}`,
-		{ method: 'post', body: JSON.stringify(prod) }
+		`${global.window.location.href}sales/`,
+		{ method: 'post', body: JSON.stringify(sale) }
 	);
+}
+
+const MalformedProd = 'Malformed Request - The data provided was not a valid product.';
+
+/**
+ * Sends a request to the server to add a product.
+ * @param toSend The product to send to the server
+ * @param location The endpoint to send the product to (e.g. /prods)
+ */
+export async function sendProd(toSend: Product, location: string): Promise<void> {
+	try {
+		const response = await fetch(`${global.window.location.href}${location}`,
+			{
+				method: 'post',
+				body: JSON.stringify(toSend)
+			})
+		const code = response.status
+		if (code === 400) { throw MalformedProd }
+	}
+	catch (err) {
+		window.alert(`An error occured when I tried to add product.
+Please ensure the server is running.
+For advanced users: ${err}`)
+	}
+}
+
+
+/**
+* Fetches the stock data for a given product, adds it to the product object 
+* and returns it
+* @param prod - a Product
+* @returns - a Promise<ProductWithStock>, a Product with the stock data added
+*/
+export async function getStockData(prod: Product): Promise<ProductWithStock> {
+	return await fetch(`${window.location.href}/stock/${prod.productId}`)
+		.then(data => data.json() as unknown as number)
+		.then(data => addStockData(prod, data))
+}
+
+/**
+* Add stock data to a product object.
+* @param prod - a Product
+* @param stock - a number, the stock data to add to the product
+* @returns - a ProductWithStock, a Product with the stock data added
+*/
+export function addStockData(prod: Product, stock: number): ProductWithStock {
+	return {
+		prod: prod,
+		pInStock: stock
+	}
+}
+
+/**
+ * @param prod - a Product
+ * @param callback - a function that takes a ProductWithStock and does something with it
+ */
+export function fetchProdWithStock(prod: Product, callback: (json: object) => void) {
+	fetch(`${window.location.href}stock${prod.productId}`)
+		.then(data => data.json() as unknown as ProductWithStock)
+		.then(data => callback(data))
+}
+
+/**
+ * @param callback - a function that takes a ProductWithStock and does something with it
+ */
+export function fetchProdsWithStock(callback: (json: object) => void) {
+	fetch(`${window.location.href}stock/all/`)
+		.then(data => data.json() as unknown as ProductWithStock[])
+		.then(data => callback(data))
 }
 
 /**
@@ -53,6 +150,8 @@ export async function purge() {
 		// In case you missed it, this is a very dangerous function.
 		// Maybe I should make the URL longer. Wouldn't that be funny.
 		await fetch(`${global.window.location.href}UNSAFE-PURGE-ALL-CHECK-FIRST-IM-SERIOUS/`, { method: 'delete' })
+		// Reload the page so the user can set up a new database.
+		window.location.reload()
 	}
 }
 

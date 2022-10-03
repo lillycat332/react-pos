@@ -1,0 +1,35 @@
+[23:05:01.764] Global cache location '/Users/lillycham/Library/Caches/typescript/4.8', safe file path '/users/lillycham/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/typingsafelist.json', types map path /users/lillycham/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/typesmap.json
+[23:05:01.766] Processing cache location '/Users/lillycham/Library/Caches/typescript/4.8'
+[23:05:01.766] Trying to find '/Users/lillycham/Library/Caches/typescript/4.8/package.json'...
+[23:05:01.767] Loaded content of '/Users/lillycham/Library/Caches/typescript/4.8/package.json': {"private":true,"dependencies":{"types-registry":"^0.1.610"}}
+[23:05:01.768] Loaded content of '/Users/lillycham/Library/Caches/typescript/4.8/package-lock.json'
+[23:05:01.768] Finished processing cache location '/Users/lillycham/Library/Caches/typescript/4.8'
+[23:05:01.768] Process id: 63016
+[23:05:01.768] NPM location: /usr/local/bin/npm (explicit '--npmLocation' not  provided)
+[23:05:01.768] validateDefaultNpmLocation: false
+[23:05:01.768] Npm config file: /Users/lillycham/Library/Caches/typescript/4.8/package.json
+[23:05:01.768] Updating types-registry npm package...
+[23:05:01.768] Exec: /usr/local/bin/npm install --ignore-scripts types-registry@latest
+[23:05:02.896]     Succeeded. stdout:
+    + types-registry@0.1.610
+    updated 1 package and audited 1 package in 0.493s
+found 0 vulnerabilities
+
+
+[23:05:02.896] Updated types-registry npm package
+[10:43:32.068] Got install request {"projectName":"/dev/null/inferredProject2*","fileNames":[],"compilerOptions":{"module":1,"target":3,"jsx":1,"allowJs":true,"allowSyntheticDefaultImports":true,"allowNonTsExtensions":true,"noEmitForJsFiles":true},"typeAcquisition":{"enable":true,"include":[],"exclude":[]},"unresolvedImports":[],"projectRootPath":"/devel/hs-pos/frontend/src/components","kind":"discover"}
+[10:43:32.118] Loaded safelist from types map file '/users/lillycham/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/typesmap.json'
+[10:43:32.118] Explicitly included types: []
+[10:43:32.120] Inferred typings from unresolved imports: []
+[10:43:32.120] Result: {"cachedTypingPaths":[],"newTypingNames":[],"filesToWatch":["/devel/hs-pos/frontend/src/components/bower_components","/devel/hs-pos/frontend/src/components/node_modules"]}
+[10:43:32.120] Finished typings discovery: {"cachedTypingPaths":[],"newTypingNames":[],"filesToWatch":["/devel/hs-pos/frontend/src/components/bower_components","/devel/hs-pos/frontend/src/components/node_modules"]}
+[10:43:32.120] DirectoryWatcher:: Added:: WatchInfo: /devel/hs-pos/frontend/src/components/bower_components
+[10:43:32.122] DirectoryWatcher:: Added:: WatchInfo: /devel/hs-pos/frontend/src/components/bower_components 1 undefined Project: /dev/null/inferredProject2* watcher already invoked: false
+[10:43:32.127] Elapsed:: 4.209915995597839ms DirectoryWatcher:: Added:: WatchInfo: /devel/hs-pos/frontend/src/components/bower_components 1 undefined Project: /dev/null/inferredProject2* watcher already invoked: false
+[10:43:32.127] DirectoryWatcher:: Added:: WatchInfo: /devel/hs-pos/frontend/src/components/node_modules
+[10:43:32.127] DirectoryWatcher:: Added:: WatchInfo: /devel/hs-pos/frontend/src/components/node_modules 1 undefined Project: /dev/null/inferredProject2* watcher already invoked: false
+[10:43:32.127] Elapsed:: 0.2777090072631836ms DirectoryWatcher:: Added:: WatchInfo: /devel/hs-pos/frontend/src/components/node_modules 1 undefined Project: /dev/null/inferredProject2* watcher already invoked: false
+[10:43:32.127] Sending response:
+    {"projectName":"/dev/null/inferredProject2*","typeAcquisition":{"enable":true,"include":[],"exclude":[]},"compilerOptions":{"module":1,"target":3,"jsx":1,"allowJs":true,"allowSyntheticDefaultImports":true,"allowNonTsExtensions":true,"noEmitForJsFiles":true},"typings":[],"unresolvedImports":[],"kind":"action::set"}
+[10:43:32.128] Response has been sent.
+[10:43:32.128] No new typings were requested as a result of typings discovery

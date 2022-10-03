@@ -15,7 +15,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import CartPage from './CartPage';
 import { ProductDisplay, Product, Currency, GBP } from '../types';
-import { fetchProds, makeSale, purge, getToken, setToken } from '../lib';
+import { fetchProds, makeSale, purge, getToken, setToken, fetchProdsWithStock } from '../lib';
 import Login from './Login';
 
 const drawerWidth = 240;
@@ -27,7 +27,8 @@ const ProductCard = React.lazy(() => import('./ProductCard'))
 const ProductPage = React.lazy(() => import('./ProductPage'))
 const SalesPage = React.lazy(() => import('./SalesPage'))
 const StockPage = React.lazy(() => import('./StockPage'));
-const UsersPage = React.lazy(() => import('./UsersPage'))
+const UsersPage = React.lazy(() => import('./UsersPage'));
+const HelpPage = React.lazy(() => import('./HelpPage'));
 
 const AttachMoneyIcon = React.lazy(() => import('@mui/icons-material/AttachMoney'));
 const ExitToAppIcon = React.lazy(() => import('@mui/icons-material/ExitToApp'));
@@ -38,6 +39,7 @@ const MenuBook = React.lazy(() => import('@mui/icons-material/MenuBook'));
 const PersonIcon = React.lazy(() => import('@mui/icons-material/Person'));
 const SettingsIcon = React.lazy(() => import('@mui/icons-material/Settings'));
 const ShoppingCartIcon = React.lazy(() => import('@mui/icons-material/ShoppingCart'));
+const HelpCenterIcon = React.lazy(() => import('@mui/icons-material/HelpCenter'));
 
 export default function MainView() {
 	const token = getToken();
@@ -49,10 +51,10 @@ export default function MainView() {
 	const [currencyType,] = React.useState({ kind: 'GBP', symbol: '£' } as GBP as Currency);
 	const [prods, setProds] = React.useState([]);
 	const [Cart, setCart] = React.useState([]);
+	const [prodsInStock, setProdsInStock] = React.useState([])
 
 	const addToCart = (prod: Product) => {
 		setCart([...Cart, prod])
-		console.log(Cart);
 	}
 
 	const cartChanger = (newProd: Product) => {
@@ -64,43 +66,107 @@ export default function MainView() {
 		setCart([])
 	}
 
+	// Eww
 	const listItems = prods.map((product) => {
 		const prod: ProductDisplay = {
 			p: product,
 			handler: cartChanger,
 			currency: currencyType.symbol
 		}
-		return (<ProductCard prod={prod} stateChanger={cartChanger} />)
+
+		console.log(prodsInStock)
+
+		const productIndex = prodsInStock.findIndex(elem => {
+			return elem.prod.productId === prod.p.productId
+		});
+
+		if (productIndex !== -1) {
+			const prodStock = prodsInStock[productIndex].pInStock
+			return prodStock > 0 && <ProductCard prod={prod} stateChanger={cartChanger} />
+		}
+		return null
 	});
 
+	// What do when the user toggles the drawer (only on mobile)
 	const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
 
+	// Fetch data on load
 	React.useEffect(() => {
 		fetchProds(setProds);
+		fetchProdsWithStock(setProdsInStock);
 	}, [])
 
+	// Go to the login page if the user isn't logged in
 	if (!token) {
 		return <Login setToken={setToken} />
 	}
 
+	// The drawer is a list of links to different pages
+	// This match expression decides which page to show
+	// based on the contents of the state variable Page
+	// (which is set by the drawer).
 	function HandlePages() {
 		switch (Page) {
 			case 'Home':
-				return <Suspense><HomePage listItems={listItems} /></Suspense>;
+				return (
+					<Suspense>
+						<HomePage listItems={listItems} />
+					</Suspense>);
 			case 'Users':
-				return <Suspense><UsersPage priv={getToken().sessionUser.cuserPrivilege} /></Suspense>;
+				return (
+					<Suspense>
+						<UsersPage priv={getToken().sessionUser.cuserPrivilege} />
+					</Suspense>);
 			case 'Manage':
-				return <Suspense><ManagePage sesh={getToken()} purge={purge} /></Suspense>;
+				return (
+					<Suspense>
+						<ManagePage
+							sesh={getToken()}
+							purge={purge}
+						/>
+					</Suspense>
+				);
 			case 'Cart':
-				return <Suspense><CartPage cart={Cart} currency={currencyType.symbol} emptier={emptyCart} /></Suspense>;
+				return (
+					<Suspense>
+						<CartPage
+							cart={Cart}
+							currency={currencyType.symbol}
+							emptier={emptyCart}
+							canceller={() => setCart([])}
+						/>
+					</Suspense>
+				);
 			case 'Sales':
-				return <Suspense><SalesPage /></Suspense>;
+				return (
+					<Suspense>
+						<SalesPage />
+					</Suspense>
+				);
 			case 'Stock':
-				return <Suspense><StockPage /></Suspense>;
+				return (
+					<Suspense>
+						<StockPage />
+					</Suspense>
+				);
 			case 'Analysis':
-				return <Suspense><AnalysisPage /></Suspense>;
+				return (
+					<Suspense>
+						<AnalysisPage />
+					</Suspense>
+				);
 			case 'Products':
-				return <Suspense><ProductPage setProds={setProds} /></Suspense>;
+				return (
+					<Suspense>
+						<ProductPage setProds={setProds} />
+					</Suspense>
+				);
+			case 'Help':
+				return (
+					<Suspense>
+						<HelpPage />
+					</Suspense>
+				);
 			default:
 				return null;
 		}
@@ -109,7 +175,6 @@ export default function MainView() {
 	const drawer = (
 		<div>
 			<Toolbar />
-			<Divider />
 			<List>
 				{['Home', 'Cart'].map((text, index) => (
 					<ListItem button key={text} onClick={() => setPage(text)}>
@@ -125,7 +190,14 @@ export default function MainView() {
 			</List>
 			<Divider />
 			<List>
-				{['Sales', 'Analysis', 'Stock', 'Users', 'Products', 'Manage'].map((text: string, index) => (
+				{['Sales'
+					, 'Analysis'
+					, 'Stock'
+					, 'Users'
+					, 'Products'
+					, 'Manage'
+					, 'Help'
+				].map((text: string, index) => (
 					<ListItem button key={text} onClick={() => setPage(text)}>
 						<Suspense>
 							<ListItemIcon>
@@ -135,6 +207,7 @@ export default function MainView() {
 								{index === 3 && <PersonIcon />}
 								{index === 4 && <MenuBook />}
 								{index === 5 && <SettingsIcon />}
+								{index === 6 && <HelpCenterIcon />}
 							</ListItemIcon>
 						</Suspense>
 						<ListItemText primary={text} />
@@ -150,7 +223,7 @@ export default function MainView() {
 					<ListItemText>Logout</ListItemText>
 				</ListItem>
 			</List>
-		</div>
+		</div >
 	);
 
 	return (
