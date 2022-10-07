@@ -14,18 +14,18 @@ export default function ProductCard(props: { prod: ProductDisplay, stateChanger:
 		<Card>
 			<CardContent>
 				<Typography gutterBottom
-					variant="h5"
-					component="h2">
+					variant='h5'
+					component='h2'>
 					{prod.p.productName}
 				</Typography>
-				<Typography variant="body2"
-					color="textSecondary"
-					component="p">
+				<Typography variant='body2'
+					color='textSecondary'
+					component='p'>
 					{prod.currency}{prod.p.productPrice}
 				</Typography>
 			</CardContent>
 			<CardActions>
-				{shouldShowButton ? <Button size="small" variant="contained" color="primary"
+				{shouldShowButton ? <Button size='small' variant='contained' color='primary'
 					onClick={stateChanger}>Add to Cart</Button> : null}
 			</CardActions>
 		</Card>

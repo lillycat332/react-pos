@@ -41,11 +41,11 @@ export default function Login(props: { setToken: Function }) {
 	const [userOk, setUserOk] = useState(false);
 
 	// IIFE to check if the user is onboarded, and set the state accordingly.
-	// Hack to work around weird infinite loop behaviour.
+	// Work around for weird infinite loop behaviour.
 	(async () => { await getShouldOnboard((x: boolean) => { setUserOk(x) }) })()
 
-	const [username, setUserName] = useState("");
-	const [password, setPassword] = useState("");
+	const [username, setUserName] = useState('');
+	const [password, setPassword] = useState('');
 	const req: LoginRequest = { requestName: username, requestPass: password }
 	// set the token then reload the page, sending the user back to the home page
 	// as the token is now set.
@@ -62,30 +62,30 @@ export default function Login(props: { setToken: Function }) {
 				<Box sx={centeredBox}
 				>
 					<Box sx={{ margin: '5%' }}>
-						<Typography variant="h5"
+						<Typography variant='h5'
 							sx={{ textAlign: 'center' }}>Welcome!</Typography>
-						<Typography variant="h6"
+						<Typography variant='h6'
 							sx={{ textAlign: 'center' }}> Please Log In.</Typography>
 					</Box>
 
 					<Box>
 						<form onSubmit={handleSubmit}>
 							<label>
-								<Typography variant="body1">Username</Typography>
+								<Typography variant='body1'>Username</Typography>
 								<TextField sx={{ margin: '5%' }}
-									type="text"
+									type='text'
 									onChange={e => setUserName(e.target.value)} />
 							</label>
 							<label>
 								<Typography>Password</Typography>
 								<TextField sx={{ margin: '5%' }}
-									type="password"
+									type='password'
 									onChange={e => setPassword(e.target.value)} />
 							</label>
 							<div>
-								<Button variant="contained"
-									color="primary"
-									type="submit">Submit</Button>
+								<Button variant='contained'
+									color='primary'
+									type='submit'>Submit</Button>
 							</div>
 						</form>
 					</Box>

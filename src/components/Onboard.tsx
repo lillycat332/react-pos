@@ -13,8 +13,8 @@ const MotionBox = motion(Box)
 const MotionButton = motion(Button)
 const userDefaults: User = {
 	userId: 0,
-	userName: "",
-	userPassword: "",
+	userName: '',
+	userPassword: '',
 	userPrivilege: 3
 }
 
@@ -23,7 +23,7 @@ export default function Onboard() {
 	const [formVal, setFormVal] = React.useState(userDefaults);
 
 	const handleSubmit = (event: any) => {
-		sendObject(formVal, "users");
+		sendObject(formVal, 'users');
 		setFormVal(userDefaults)
 		event.preventDefault();
 		setPage('done')
@@ -40,13 +40,13 @@ export default function Onboard() {
 	return (
 		<MotionBox
 			sx={centeredBox}
-			initial={{ x: "-300px", opacity: 0 }}
+			initial={{ x: '-300px', opacity: 0 }}
 			animate={{ x: 0, opacity: 1 }}
 			transition={{ type: 'spring', stiffness: 100 }}
 		>
 			{page === 'initial' && (
 				<Box>
-					<Typography id="welcome-text" variant="h4">
+					<Typography id='welcome-text' variant='h4'>
 						Welcome. Let's get you set up.
 					</Typography>
 					<MotionButton
@@ -61,28 +61,28 @@ export default function Onboard() {
 
 			{page === 'createUser' && (
 				<MotionBox
-					initial={{ x: "-300px", opacity: 0 }}
+					initial={{ x: '-300px', opacity: 0 }}
 					animate={{ x: 0, opacity: 1 }}
 					transition={{ type: 'spring', stiffness: 100 }}>
-					<Typography id="add-admin-title" variant="h6">
+					<Typography id='add-admin-title' variant='h6'>
 						Let's create your admin account.
 					</Typography>
 					<div>
 						<form onSubmit={handleSubmit}>
-							<TextField id="name-input"
-								name="userName"
-								label="Username"
+							<TextField id='name-input'
+								name='userName'
+								label='Username'
 								sx={{ margin: '2%' }}
-								type="text" margin="dense"
-								variant="outlined"
+								type='text' margin='dense'
+								variant='outlined'
 								value={formVal.userName}
 								onChange={handleInputChange} />
-							<TextField id="pw-input"
+							<TextField id='pw-input'
 								sx={{ margin: '2%' }}
-								name="userPassword"
+								name='userPassword'
 								type='text'
-								label="Password" margin="dense"
-								variant="outlined"
+								label='Password' margin='dense'
+								variant='outlined'
 								value={formVal.userPassword}
 								onChange={handleInputChange} />
 							<Typography sx={{ margin: '2%' }}>
@@ -91,9 +91,9 @@ export default function Onboard() {
 							</Typography>
 							<Tilt>
 								<MotionButton
-									variant="contained"
-									color="primary"
-									type="submit"
+									variant='contained'
+									color='primary'
+									type='submit'
 									initial={{ scale: 1 }}
 									whileHover={{ scale: 1.25 }}
 								>
@@ -107,11 +107,11 @@ export default function Onboard() {
 
 			{page === 'done' && (
 				<MotionBox
-					initial={{ x: "-300px", opacity: 0 }}
+					initial={{ x: '-300px', opacity: 0 }}
 					animate={{ x: 0, opacity: 1 }}
 					transition={{ type: 'spring', stiffness: 100 }}
 				>
-					<Typography id="add-admin-title" variant="h6">
+					<Typography id='add-admin-title' variant='h6'>
 						And that's everything you need to get started!
 					</Typography>
 					<MotionButton

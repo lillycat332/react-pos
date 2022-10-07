@@ -10,6 +10,7 @@ import { Product } from '../types';
 type SaleAnalysisData = {
 	topProd: Product,
 	bottomProd: Product,
+	percentDiff: [number, boolean]
 }
 
 export default function AnalysisPage() {
@@ -21,7 +22,9 @@ export default function AnalysisPage() {
 			.then(data => data.json() as unknown as Product)
 		const bottom = await fetch(`${window.location.href}prods/bottom`)
 			.then(data => data.json() as unknown as Product)
-		setAnalysis({ topProd: top, bottomProd: bottom })
+		const percentDiff = await fetch(`${window.location.href}sales/percent-diff`)
+			.then(data => data.json() as unknown as [number, boolean])
+		setAnalysis({ topProd: top, bottomProd: bottom, percentDiff: percentDiff })
 		console.error(top, bottom)
 		setLoaded(true)
 	}
@@ -38,12 +41,12 @@ export default function AnalysisPage() {
 			<List>
 				<ListItem>
 					<Typography>
-						✨ Consider: ordering more {loaded ? analysisData.topProd.productName : "loading..."} - It's your top product!
+						✨ Consider: ordering more {loaded ? analysisData.topProd.productName : 'loading...'} - It's your top product!
 					</Typography>
 				</ListItem>
 				<ListItem>
 					<Typography>
-						✨ It seems that {loaded ? analysisData.bottomProd.productName : "loading..."} is not selling well - your least selling product.
+						✨ It seems that {loaded ? analysisData.bottomProd.productName : 'loading...'} is not selling well - your least selling product.
 					</Typography>
 				</ListItem>
 				<ListItem>
@@ -53,7 +56,9 @@ export default function AnalysisPage() {
 				</ListItem>
 				<ListItem>
 					<Typography>
-						✨ Overall, you're [up/down] [INSERT PERCENTAGE HERE] on sales this month.
+						✨ Overall, you're {loaded ?
+							`${analysisData.percentDiff[1] ? 'up' : 'down'} ${analysisData.percentDiff[0]}%`
+							: 'loading...'} on sales this month.
 					</Typography>
 				</ListItem>
 			</List>

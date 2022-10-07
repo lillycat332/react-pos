@@ -1,9 +1,9 @@
 .roboto {
-	font-family: 'Roboto', sans-serif;
+	font-family: -apple-system, 'Roboto', sans-serif;
 }
 
 .bottom-right {
-	position: absolute;
+	position: fixed;
 	bottom: 0!important;
 	right: 0;
 	margin-bottom: 2%;

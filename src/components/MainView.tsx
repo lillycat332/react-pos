@@ -74,8 +74,6 @@ export default function MainView() {
 			currency: currencyType.symbol
 		}
 
-		console.log(prodsInStock)
-
 		const productIndex = prodsInStock.findIndex(elem => {
 			return elem.prod.productId === prod.p.productId
 		});

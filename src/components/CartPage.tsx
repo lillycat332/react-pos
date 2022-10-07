@@ -22,7 +22,7 @@ export default function CartPage(props: { cart: ProductDisplay[], currency: stri
 	else {
 		return (
 			<div>
-				<Typography variant="h4">Cart</Typography>
+				<Typography variant='h4'>Cart</Typography>
 				<ul>
 					{props.cart.map((prod) => {
 						console.log(prod); return (
@@ -32,20 +32,20 @@ export default function CartPage(props: { cart: ProductDisplay[], currency: stri
 						)
 					})}
 				</ul>
-				<Typography variant="h5">
+				<Typography variant='h5'>
 					Total cost: {props.currency}{total()} <br />
 				</Typography >
 				<Button
-					variant="contained"
-					color="primary"
+					variant='contained'
+					color='primary'
 					onClick={() => { props.emptier() }}
 					sx={{ m: '1%' }}
 				>
 					Make sale
 				</Button>
 				<Button
-					variant="contained"
-					color="error"
+					variant='contained'
+					color='error'
 					onClick={() => { props.canceller() }}
 					sx={{ m: '1%' }}>
 					Cancel sale

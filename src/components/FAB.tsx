@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 import Box from '@mui/material/Box';
 import Fab from '@mui/material/Fab';
 import '../index.css';
@@ -12,10 +12,10 @@ import '../index.css';
  */
 export default function FAB(props: { callback: Function, icon: React.Component }) {
 	return (
-		<Box className="bottom-right">
-			<Fab color="primary"
-				aria-label="search-fab"
-				className="bottom-right">
+		<Box className='bottom-right'>
+			<Fab color='primary'
+				aria-label='search-fab'
+				className='bottom-right'>
 				<React.Component {...props.icon} />
 			</Fab>
 		</Box>

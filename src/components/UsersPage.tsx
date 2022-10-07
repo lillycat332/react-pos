@@ -26,8 +26,8 @@ const modalStyle = {
 
 const userDefaults: User = {
 	userId: 0,
-	userName: "",
-	userPassword: "",
+	userName: '',
+	userPassword: '',
 	userPrivilege: 1
 }
 
@@ -93,41 +93,41 @@ For advanced users: ${err}`)
 	}, []);
 
 	// If the user is not a supervisor or admin, show a blank page. 
-	if (props.priv < 2) { console.error("privilege too low: " + props.priv); return null }
+	if (props.priv < 2) { console.error('privilege too low: ' + props.priv); return null }
 
 	return (
 		<div>
 			<Modal
 				open={open}
 				onClose={handleClose}
-				aria-labelledby="modal-modal-title"
-				aria-describedby="modal-modal-description"
+				aria-labelledby='modal-modal-title'
+				aria-describedby='modal-modal-description'
 			>
 				<Box sx={modalStyle}>
-					<Typography id="modal-modal-title" variant="h6" component="h2">
+					<Typography id='modal-modal-title' variant='h6' component='h2'>
 						ADD NEW USER
 					</Typography>
 					<div>
 						<form onSubmit={handleSubmit}>
-							<TextField id="name-input"
-								name="userName"
-								label="Username"
-								type="text" margin="dense"
-								variant="outlined"
+							<TextField id='name-input'
+								name='userName'
+								label='Username'
+								type='text' margin='dense'
+								variant='outlined'
 								value={formVal.userName}
 								onChange={handleInputChange} />
-							<TextField id="pw-input"
-								name="userPassword"
+							<TextField id='pw-input'
+								name='userPassword'
 								type='text'
-								label="Password" margin="dense"
-								variant="outlined"
+								label='Password' margin='dense'
+								variant='outlined'
 								value={formVal.userPassword}
 								onChange={handleInputChange} />
 							<div>
 								Privilege
 								<Slider
 									value={formVal.userPrivilege}
-									onChange={handleSliderChange("userPrivilege")}
+									onChange={handleSliderChange('userPrivilege')}
 									defaultValue={1}
 									step={1}
 									min={1}
@@ -135,21 +135,21 @@ For advanced users: ${err}`)
 									marks={[
 										{
 											value: 1,
-											label: "Basic",
+											label: 'Basic',
 										},
 										{
 											value: 2,
-											label: "Supervisor",
+											label: 'Supervisor',
 										},
 										{
 											value: 3,
-											label: "Admin",
+											label: 'Admin',
 										},
 									]}
-									valueLabelDisplay="off"
+									valueLabelDisplay='off'
 								/>
 							</div>
-							<Button variant="contained" color="primary" type="submit">
+							<Button variant='contained' color='primary' type='submit'>
 								Submit
 							</Button>
 						</form>
@@ -166,9 +166,9 @@ For advanced users: ${err}`)
 						})
 					}
 				}}
-				title="Users" />
+				title='Users' />
 			<Box onClick={handleOpen} sx={{ position: 'fixed', bottom: 0, right: 0, margin: '2%' }}>
-				<Fab color="primary" aria-label="add-user">
+				<Fab color='primary' aria-label='add-user'>
 					<AddIcon />
 				</Fab>
 			</Box>

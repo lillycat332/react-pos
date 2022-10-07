@@ -9,6 +9,11 @@ import {
 } from './types';
 
 /**
+ * Shorthand for printing to the console.
+ */
+export const log = console.log.bind(console)
+
+/**
  * Sends any object to the server.
  * @param toSend - an object to send to the server
  * @param location a string representing the route to send the request to
@@ -141,12 +146,12 @@ export function fetchProdsWithStock(callback: (json: object) => void) {
 
 /**
  * Want to factory reset the whole damn thing? This is the function for you.
- * @returns - nothing. because the page will reload.
+ * @returns - nothing. but the page will reload!
  */
 export async function purge() {
 	// We wanna make pretty damn sure the user wants to do this
-	const isOk = prompt("Are you ABSOLUTELY SURE you want to wipe the database? If so, type 'I am absolutely sure' verbatim (without speech marks)")
-	if (isOk === "I am absolutely sure") {
+	const isOk = prompt('Are you ABSOLUTELY SURE you want to wipe the database? If so, type "I am absolutely sure" verbatim (without speech marks)')
+	if (isOk === 'I am absolutely sure') {
 		// In case you missed it, this is a very dangerous function.
 		// Maybe I should make the URL longer. Wouldn't that be funny.
 		await fetch(`${global.window.location.href}UNSAFE-PURGE-ALL-CHECK-FIRST-IM-SERIOUS/`, { method: 'delete' })

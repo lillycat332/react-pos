@@ -8,8 +8,8 @@ const ManagePage = (props: { sesh: SessionToken, purge: () => void }) => {
 		<div>
 			<Button
 				onClick={props.purge}
-				variant="contained"
-				color="error"
+				variant='contained'
+				color='error'
 				sx={{ m: '2%' }}
 			>
 				Wipe database (factory reset)

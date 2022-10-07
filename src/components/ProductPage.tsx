@@ -32,7 +32,7 @@ const modalStyle = {
 
 const productDefaults: Product = {
 	productId: 0,
-	productName: "",
+	productName: '',
 	productPrice: 0
 }
 
@@ -102,33 +102,33 @@ For advanced users: ${err}`)
 			<Modal
 				open={open}
 				onClose={handleClose}
-				aria-labelledby="modal-modal-title"
-				aria-describedby="modal-modal-description"
+				aria-labelledby='modal-modal-title'
+				aria-describedby='modal-modal-description'
 			>
 				<Box sx={modalStyle}>
-					<Typography id="modal-modal-title" variant="h6" component="h2">
+					<Typography id='modal-modal-title' variant='h6' component='h2'>
 						Add New Product
 					</Typography>
 					<div>
 						<form onSubmit={handleSubmit}>
 							<TextField
-								id="name-input"
-								name="productName"
-								label="Product Name"
-								type="text" margin="dense"
-								variant="outlined"
+								id='name-input'
+								name='productName'
+								label='Product Name'
+								type='text' margin='dense'
+								variant='outlined'
 								value={formVal.productName}
 								onChange={handleInputChange} />
 
-							<TextField id="price-input"
-								name="productPrice"
-								type="number"
-								label="Price" margin="dense"
-								variant="outlined"
+							<TextField id='price-input'
+								name='productPrice'
+								type='number'
+								label='Price' margin='dense'
+								variant='outlined'
 								value={formVal.productPrice}
 								onChange={handleInputNumericChange} />
 							<br />
-							<Button variant="contained" color="primary" type="submit">
+							<Button variant='contained' color='primary' type='submit'>
 								Submit
 							</Button>
 						</form>
@@ -139,13 +139,13 @@ For advanced users: ${err}`)
 			<MUIDataTable
 				columns={prodCols}
 				data={prods}
-				title="Products"
+				title='Products'
 				options={{
-					enableNestedDataAccess: ".",
+					enableNestedDataAccess: '.',
 					onRowsDelete: (row: any) => { removeProduct(row, setProds); }
 				}} />
-			<Box className="bottom-right" onClick={() => { setOpen(true) }}>
-				<Fab color="primary" aria-label="add-user">
+			<Box className='bottom-right' onClick={() => { setOpen(true) }}>
+				<Fab color='primary' aria-label='add-user'>
 					<AddIcon />
 				</Fab>
 			</Box>
