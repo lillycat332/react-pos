@@ -50,66 +50,66 @@ export default function AnalysisPage() {
 	React.useEffect(() => {
 		getAnalysisData()
 		if (stockNum != 0 && currentProd != undefined) {
-			fetch(`/analysis/${currentProd.productId} / ${stockNum}', {
+			fetch(`/analysis/${currentProd.productId} / ${stockNum}`, {
 				method: 'post'
 			})
-}
+		}
 	}, [])
 
-return (
-	<Box>
-		<Typography variant='h6'>
-			Basic Information:
-		</Typography>
-		<List>
-			<ListItem>
-				<Typography>
-					✨ Consider: ordering more {loaded ? analysisData.topProd.productName : 'loading...'} - It's your top product!
-				</Typography>
-			</ListItem>
-			<ListItem>
-				<Typography>
-					✨ It seems that {loaded ? analysisData.bottomProd.productName : 'loading...'} is not selling well - your least selling product.
-				</Typography>
-			</ListItem>
-			<ListItem>
-				<Typography>
-					✨ Overall, you're {loaded ?
-						`${ analysisData.percentDiff[1] ? 'up' : 'down' } ${ analysisData.percentDiff[0] } % `
-						: 'loading...'} on sales this month.
-				</Typography>
-			</ListItem>
-		</List>
+	return (
+		<Box>
+			<Typography variant='h6'>
+				Basic Information:
+			</Typography>
+			<List>
+				<ListItem>
+					<Typography>
+						✨ Consider: ordering more {loaded ? analysisData.topProd.productName : 'loading...'} - It's your top product!
+					</Typography>
+				</ListItem>
+				<ListItem>
+					<Typography>
+						✨ It seems that {loaded ? analysisData.bottomProd.productName : 'loading...'} is not selling well - your least selling product.
+					</Typography>
+				</ListItem>
+				<ListItem>
+					<Typography>
+						✨ Overall, you're {loaded ?
+							`${analysisData.percentDiff[1] ? 'up' : 'down'} ${analysisData.percentDiff[0]} % `
+							: 'loading...'} on sales this month.
+					</Typography>
+				</ListItem>
+			</List>
 
-		<Typography variant='h6'>
-			Advanced Sales Analysis:
-		</Typography>
-		<Box sx={{
-			width: '50%'
-		}}>
-			<FormControl fullWidth>
-				<Select
-					value={currentProd}
-					onChange={handleChange}
-					labelId="product-select-label"
-					id="product-select"
-					label='Product'
-					sx={{ margin: '1rem 0' }}
-				>
-					{prods.map((prod) => {
-						// @ts-ignore -- MUI doesn't like the value prop
-						return <MenuItem value={prod}>{prod.productName}</MenuItem>
-					})}
-				</Select>
-				<TextField
-					value={stockNum}
-					onChange={handleChangeNum}
-					type='number'
-					label='Intended restock amount'
-					sx={{ margin: '1rem 0' }}
-				/>
-			</FormControl>
-		</Box>
-	</Box >
-)
+			<Typography variant='h6'>
+				Advanced Sales Analysis:
+			</Typography>
+			<Box sx={{
+				width: '50%'
+			}}>
+				<FormControl fullWidth>
+					<Select
+						value={currentProd}
+						onChange={handleChange}
+						labelId="product-select-label"
+						id="product-select"
+						label='Product'
+						sx={{ margin: '1rem 0' }}
+					>
+						{prods.map((prod) => {
+							// @ts-ignore -- MUI doesn't like the value prop
+							return <MenuItem value={prod}>{prod.productName}</MenuItem>
+						})}
+					</Select>
+					<TextField
+						value={stockNum}
+						onChange={handleChangeNum}
+						type='number'
+						label='Intended restock amount'
+						sx={{ margin: '1rem 0' }}
+					/>
+				</FormControl>
+			</Box>
+		</Box >
+	)
 }
