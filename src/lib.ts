@@ -107,7 +107,7 @@ For advanced users: ${err}`)
 * @returns - a Promise<ProductWithStock>, a Product with the stock data added
 */
 export async function getStockData(prod: Product): Promise<ProductWithStock> {
-	return await fetch(`${window.location.href}/stock/${prod.productId}`)
+	return await fetch(`//stock/${prod.productId}`)
 		.then(data => data.json() as unknown as number)
 		.then(data => addStockData(prod, data))
 }
@@ -130,7 +130,7 @@ export function addStockData(prod: Product, stock: number): ProductWithStock {
  * @param callback - a function that takes a ProductWithStock and does something with it
  */
 export function fetchProdWithStock(prod: Product, callback: (json: object) => void) {
-	fetch(`${window.location.href}stock${prod.productId}`)
+	fetch(`/stock${prod.productId}`)
 		.then(data => data.json() as unknown as ProductWithStock)
 		.then(data => callback(data))
 }
@@ -139,7 +139,7 @@ export function fetchProdWithStock(prod: Product, callback: (json: object) => vo
  * @param callback - a function that takes a ProductWithStock and does something with it
  */
 export function fetchProdsWithStock(callback: (json: object) => void) {
-	fetch(`${window.location.href}stock/all/`)
+	fetch(`/stock/all/`)
 		.then(data => data.json() as unknown as ProductWithStock[])
 		.then(data => callback(data))
 }
@@ -154,7 +154,7 @@ export async function purge() {
 	if (isOk === 'I am absolutely sure') {
 		// In case you missed it, this is a very dangerous function.
 		// Maybe I should make the URL longer. Wouldn't that be funny.
-		await fetch(`${window.location.href}UNSAFE-PURGE-ALL-CHECK-FIRST-IM-SERIOUS/`, { method: 'delete' })
+		await fetch(`/UNSAFE-PURGE-ALL-CHECK-FIRST-IM-SERIOUS/`, { method: 'delete' })
 		// Reload the page so the user can set up a new database.
 		window.location.reload()
 	}
@@ -167,7 +167,7 @@ export async function purge() {
  * @returns Boolean - whether the session token is valid
  */
 export async function testToken(sesh: SessionToken) {
-	const response = await fetch(`${window.location.href}session/`
+	const response = await fetch(`/session/`
 		, {
 			method: 'POST',
 			headers: {
@@ -186,7 +186,7 @@ export async function testToken(sesh: SessionToken) {
  * @returns should return a session token
  */
 export async function loginUser(creds: LoginRequest) {
-	return fetch(`${window.location.href}tawa-insa/`
+	return fetch(`/tawa-insa/`
 		, {
 			method: 'POST',
 			headers: {
@@ -222,7 +222,7 @@ export function getToken(): SessionToken {
  */
 export async function fetchUsers(callback: (json: object[]) => void) {
 	try {
-		const response = await fetch(`${window.location.href}users/all`,
+		const response = await fetch(`/users/all`,
 			{ method: 'get' });
 		const jsoned: User[] = await response.json();
 		callback(jsoned);

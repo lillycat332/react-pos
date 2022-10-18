@@ -21,7 +21,7 @@ interface isOk {
  */
 const getShouldOnboard = async (callback: Function) => {
 	try {
-		const response = await fetch(`${window.location.href}onboard/`,
+		const response = await fetch(`/onboard/`,
 			{ method: 'get' })
 			.then(data => data.json() as unknown as isOk)
 			.then(data => data.ok)
