@@ -150,14 +150,14 @@ export function fetchProdsWithStock(callback: (json: object) => void) {
  */
 export async function purge() {
 	// We wanna make pretty damn sure the user wants to do this
-	const isOk = prompt('Are you ABSOLUTELY SURE you want to wipe the database? If so, type "I am absolutely sure" verbatim (without speech marks)')
-	if (isOk === 'I am absolutely sure') {
-		// In case you missed it, this is a very dangerous function.
-		// Maybe I should make the URL longer. Wouldn't that be funny.
-		await fetch(`/UNSAFE-PURGE-ALL-CHECK-FIRST-IM-SERIOUS/`, { method: 'delete' })
-		// Reload the page so the user can set up a new database.
-		window.location.reload()
-	}
+	//const isOk = prompt('Are you ABSOLUTELY SURE you want to wipe the database? If so, type "I am absolutely sure" verbatim (without speech marks)')
+	//if (isOk === 'I am absolutely sure') {
+	// In case you missed it, this is a very dangerous function.
+	// Maybe I should make the URL longer. Wouldn't that be funny.
+	await fetch(`/UNSAFE-PURGE-ALL-CHECK-FIRST-IM-SERIOUS/`, { method: 'delete' })
+	// Reload the page so the user can set up a new database.
+	window.location.reload()
+	//}
 }
 
 /**
