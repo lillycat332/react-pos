@@ -22,7 +22,7 @@ export default function App() {
   }
   // okay, now we know that the <link> tag exists. Set the href to the favicon.
   // @ts-ignore-next-line - as above
-  link.href = `${window.location.href}favicon.png`;
+  link.href = `favicon.png`;
 
   return (
     <React.StrictMode>

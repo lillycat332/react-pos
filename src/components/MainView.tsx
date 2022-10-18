@@ -214,7 +214,7 @@ export default function MainView() {
 			</List>
 			<Divider />
 			<List>
-				<ListItem button onClick={() => { sessionStorage.clear(); global.window.location.reload() }}>
+				<ListItem button onClick={() => { sessionStorage.clear(); window.location.reload() }}>
 					<ListItemIcon>
 						<ExitToAppIcon />
 					</ListItemIcon>

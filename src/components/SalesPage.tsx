@@ -42,7 +42,7 @@ const defaultSales: salesData = {
 }
 
 async function getSalesData(date: { y: String, m: String }, id: Number) {
-	await fetch(`${global.window.location.href}sales/${date.y}/${date.m}/${id}`
+	await fetch(`${window.location.href}sales/${date.y}/${date.m}/${id}`
 		, { method: 'get' })
 		.then((data: any) => { return data })
 }

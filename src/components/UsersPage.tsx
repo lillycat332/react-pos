@@ -162,7 +162,7 @@ For advanced users: ${err}`)
 				options={{
 					onRowsDelete: (rowsDeleted: any) => {
 						rowsDeleted.data.forEach((row: any) => {
-							fetch(`${global.window.location.href}users/${Users[row.index].cuserId}`, { method: 'delete' });
+							fetch(`${window.location.href}users/${Users[row.index].cuserId}`, { method: 'delete' });
 						})
 					}
 				}}

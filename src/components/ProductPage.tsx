@@ -51,7 +51,7 @@ export default function ProductPage(props: { setProds: (json: object) => void })
 		event.stopPropagation()
 		try {
 			let response =
-				await fetch(`${global.window.location.href}prods`, {
+				await fetch(`${window.location.href}prods`, {
 					method: 'post',
 					body: JSON.stringify(formVal)
 				})
@@ -156,7 +156,7 @@ For advanced users: ${err}`)
 async function removeProduct(product: Product, callback: (json: object) => void): Promise<void> {
 	try {
 		let response =
-			await fetch(`${global.window.location.href}prods/${product.productId}`, {
+			await fetch(`${window.location.href}prods/${product.productId}`, {
 				method: 'delete'
 			})
 		if (response.status === 200) {

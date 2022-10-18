@@ -44,7 +44,7 @@ const prodCols = [
 async function fetchProdsWithSales(callback: (data: ProductWithStock[]) => void) {
 	try {
 		const response = await fetch(
-			`${global.window.location.href}stock/all/`,
+			`${window.location.href}stock/all/`,
 			{ method: 'get' }
 		)
 		if (response.status === 200) {
@@ -145,7 +145,7 @@ export default function StockPage() {
 			>
 				<EditStockModal onSubmit={(e, prod) => {
 					e.preventDefault();
-					fetch(`${global.window.location.href}stock/${prod.prod.productId}/${prod.pInStock}`, {
+					fetch(`${window.location.href}stock/${prod.prod.productId}/${prod.pInStock}`, {
 						method: 'put'
 					})
 					handleClose();

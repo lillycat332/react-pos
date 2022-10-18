@@ -19,7 +19,7 @@ export const log = console.log.bind(console)
  * @param location a string representing the route to send the request to
  */
 export async function sendObject<A extends {}>(toSend: A, location: string) {
-	await fetch(`${global.window.location.href}${location}`,
+	await fetch('${location}',
 		{
 			method: 'post',
 			body: JSON.stringify(toSend)
@@ -31,7 +31,7 @@ export async function sendObject<A extends {}>(toSend: A, location: string) {
  */
 export async function fetchProds(callback: (json: object) => void) {
 	try {
-		const response = await fetch(`${global.window.location.href}prods/all`,
+		const response = await fetch('/prods/all',
 			{ method: 'get' });
 		const jsoned = await response.json();
 		callback(jsoned);
@@ -44,7 +44,7 @@ For advanced users: ${err}`)
 }
 
 export async function sendUser(user: User) {
-	const response = await fetch(`${global.window.location.href}users`,
+	const response = await fetch('users',
 		{
 			method: 'post',
 			body: JSON.stringify(user)
@@ -70,7 +70,7 @@ export async function makeSale(prod: Product) {
 	}
 
 	await fetch(
-		`${global.window.location.href}sales/`,
+		'/sales/',
 		{ method: 'post', body: JSON.stringify(sale) }
 	);
 }
@@ -84,7 +84,7 @@ const MalformedProd = 'Malformed Request - The data provided was not a valid pro
  */
 export async function sendProd(toSend: Product, location: string): Promise<void> {
 	try {
-		const response = await fetch(`${global.window.location.href}${location}`,
+		const response = await fetch(`/${location}`,
 			{
 				method: 'post',
 				body: JSON.stringify(toSend)
@@ -154,7 +154,7 @@ export async function purge() {
 	if (isOk === 'I am absolutely sure') {
 		// In case you missed it, this is a very dangerous function.
 		// Maybe I should make the URL longer. Wouldn't that be funny.
-		await fetch(`${global.window.location.href}UNSAFE-PURGE-ALL-CHECK-FIRST-IM-SERIOUS/`, { method: 'delete' })
+		await fetch(`${window.location.href}UNSAFE-PURGE-ALL-CHECK-FIRST-IM-SERIOUS/`, { method: 'delete' })
 		// Reload the page so the user can set up a new database.
 		window.location.reload()
 	}
@@ -167,7 +167,7 @@ export async function purge() {
  * @returns Boolean - whether the session token is valid
  */
 export async function testToken(sesh: SessionToken) {
-	const response = await fetch(`${global.window.location.href}session/`
+	const response = await fetch(`${window.location.href}session/`
 		, {
 			method: 'POST',
 			headers: {
@@ -186,7 +186,7 @@ export async function testToken(sesh: SessionToken) {
  * @returns should return a session token
  */
 export async function loginUser(creds: LoginRequest) {
-	return fetch(`${global.window.location.href}tawa-insa/`
+	return fetch(`${window.location.href}tawa-insa/`
 		, {
 			method: 'POST',
 			headers: {
@@ -222,7 +222,7 @@ export function getToken(): SessionToken {
  */
 export async function fetchUsers(callback: (json: object[]) => void) {
 	try {
-		const response = await fetch(`${global.window.location.href}users/all`,
+		const response = await fetch(`${window.location.href}users/all`,
 			{ method: 'get' });
 		const jsoned: User[] = await response.json();
 		callback(jsoned);

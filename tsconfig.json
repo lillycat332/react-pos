@@ -6,7 +6,7 @@
     "target": "esnext",
     "jsx": "react",
     "forceConsistentCasingInFileNames": true,
-    "allowJs": true,
+    "allowJs": false,
     "moduleResolution": "node",
   }
 }
