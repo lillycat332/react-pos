@@ -24,3 +24,9 @@ yarn-error.log*
 /.log
 /.idea
 
+electron/bin
+electron/dist
+electron/node_modules
+electron/.cache
+electron/build
+electron/store.db
