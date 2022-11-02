@@ -46,8 +46,6 @@ export default function MainView() {
 	const [mobileOpen, setMobileOpen] = React.useState(false);
 	const [Page, setPage] = React.useState('Home');
 
-	// So, this used to have a setter, because I was going to support multiple currencies.
-	// Then I changed... something, and it broke. Leaving it here in case I want to add it back.
 	const [currencyType,] = React.useState({ kind: 'GBP', symbol: '£' } as GBP as Currency);
 	const [prods, setProds] = React.useState([]);
 	const [Cart, setCart] = React.useState([]);
@@ -65,25 +63,6 @@ export default function MainView() {
 		Cart.forEach((prod) => { makeSale(prod.p) })
 		setCart([])
 	}
-
-	// Eww
-	const listItems = prods.map((product) => {
-		const prod: ProductDisplay = {
-			p: product,
-			handler: cartChanger,
-			currency: currencyType.symbol
-		}
-
-		const productIndex = prodsInStock.findIndex(elem => {
-			return elem.prod.productId === prod.p.productId
-		});
-
-		if (productIndex !== -1) {
-			const prodStock = prodsInStock[productIndex].pInStock
-			return prodStock > 0 && <ProductCard prod={prod} stateChanger={cartChanger} />
-		}
-		return null
-	});
 
 	// What do when the user toggles the drawer (only on mobile)
 	const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
@@ -108,7 +87,7 @@ export default function MainView() {
 			case 'Home':
 				return (
 					<Suspense>
-						<HomePage listItems={listItems} />
+						<HomePage cartChanger={cartChanger} currencyType={currencyType} />
 					</Suspense>);
 			case 'Users':
 				return (
@@ -156,7 +135,7 @@ export default function MainView() {
 			case 'Products':
 				return (
 					<Suspense>
-						<ProductPage setProds={setProds} />
+						<ProductPage />
 					</Suspense>
 				);
 			case 'Help':

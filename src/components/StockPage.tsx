@@ -158,7 +158,10 @@ export default function StockPage() {
 				title='Stock'
 				options={{
 					enableNestedDataAccess: '.',
-				}} />
+					selectableRows: 'none',
+					customToolbarSelect: () => { return (<></>); },
+				}
+				} />
 			<Box className='bottom-right' onClick={() => { setOpen(true) }}>
 				<Fab color='primary' aria-label='add-user'>
 					<AddIcon />

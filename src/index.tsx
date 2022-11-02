@@ -2,6 +2,8 @@ import * as React from 'react';
 import * as ReactDOMClient from 'react-dom/client';
 import './index.css';
 import MainView from './components/MainView';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import { LocalizationProvider } from '@mui/x-date-pickers';
 
 // In retrospect, I don't really know why I didn't just put MainView in here.
 export default function App() {
@@ -26,7 +28,9 @@ export default function App() {
 
   return (
     <React.StrictMode>
-      <MainView />
+      <LocalizationProvider dateAdapter={AdapterMoment}>
+        <MainView />
+      </LocalizationProvider>
     </React.StrictMode>
   );
 }

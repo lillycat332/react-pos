@@ -43,9 +43,8 @@ const prodCols = [
 ]
 
 // The page which shows a list of products and options to manage them.
-export default function ProductPage(props: { setProds: (json: object) => void }) {
+export default function ProductPage() {
 	const [prods, setProds] = useState([])
-	const setBothProds = (prods: any[]) => { setProds(prods); props.setProds(prods) }
 	const handleSubmit = async (event: React.FormEvent) => {
 		event.preventDefault();
 		event.stopPropagation()
@@ -69,7 +68,7 @@ export default function ProductPage(props: { setProds: (json: object) => void })
 Please ensure the server is running.
 For advanced users: ${err}`)
 		}
-		fetchProds(setBothProds);
+		fetchProds(setProds);
 		handleClose();
 	};
 

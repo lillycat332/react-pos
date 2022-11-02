@@ -15,6 +15,13 @@ import {
 } from 'recharts';
 import Box from '@mui/material/Box';
 import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import { Product } from '../types';
+import { Moment } from 'moment';
+import { TextField, TextFieldProps } from '@mui/material';
+import { DesktopDatePicker, MobileDatePicker } from '@mui/x-date-pickers';
+import moment from 'moment';
 
 /**
  * 
@@ -29,7 +36,8 @@ type salesData = {
 		productName: '',
 		productPrice: 0
 	},
-	date: Date
+	startDate: Moment,
+	endDate: Moment
 }
 
 const defaultSales: salesData = {
@@ -38,17 +46,19 @@ const defaultSales: salesData = {
 		productName: '',
 		productPrice: 0
 	},
-	date: new Date()
+	startDate: moment(),
+	endDate: moment()
 }
 
 async function getSalesData(date: { y: String, m: String }, id: Number) {
-	await fetch(`/sales/${date.y}/${date.m}/${id}`
+	return await fetch(`/sales/${date.y}/${date.m}/${id}`
 		, { method: 'get' })
-		.then((data: any) => { return data })
+		.then((data: any) => data.json() as unknown as { numberSold: number, salesDate: string, salesId: number }[])
 }
 
 export default function SalesPage() {
 	const [formVal, setFormVal] = React.useState(defaultSales);
+	const [prods, setProds] = React.useState<Product[]>([])
 
 	const handleInputChange = (e: any) => {
 		const { name, value } = e.target;
@@ -58,92 +68,137 @@ export default function SalesPage() {
 		});
 	};
 
+	const handleStartDateChange = (e: any) => {
+		setFormVal({
+			...formVal,
+			startDate: e
+		})
+	}
+
+	const handleEndDateChange = (e: any) => {
+		setFormVal({
+			...formVal,
+			endDate: e
+		})
+	}
+
+	React.useEffect(() => {
+		fetch('/prods/all')
+			.then(data => data.json() as unknown as Product[])
+			.then(data => setProds(data))
+	}, [])
+
 	return (
 		<div>
 			<Typography variant='h4' component='div' gutterBottom>
 				Sales
 			</Typography>
-			{/* <SalesGraph date={formVal.date} id={formVal.prod.productId} /> */}
-			<Select
-				labelId='sales-product-label'
-				id='sales-product-select'
-				label='Product'
-				name='prod'
-				autoWidth={true}
-				margin='dense'
-				value={formVal.prod}
-				onChange={handleInputChange}
-			>
-			</Select>
+			<SalesGraph startDate={formVal.startDate} endDate={formVal.endDate} id={formVal.prod.productId} />
+			<Box sx={{
+				width: '50%'
+			}}>
+				<FormControl fullWidth>
+					<Select
+						labelId='stock-modal-product-label'
+						id='stock-modal-product-select'
+						label='Product'
+						name='prod'
+						autoWidth={true}
+						margin='dense'
+						value={formVal.prod}
+						placeholder='Select a product'
+						onChange={handleInputChange}
+						sx={{ margin: '2em 0' }}
+					>
+						{prods.map((prod) => {
+							return (
+								// @ts-ignore -- necessary because value won't accept Products
+								<MenuItem
+									value={prod}
+									key={prod.productId}
+								>{prod.productName}</MenuItem>
+							)
+						})}
+					</Select>
+					{!(window.matchMedia("only screen and (max-width: 760px)").matches) ?
+						<>
+							<Box sx={{ margin: '2em 0' }}>
+								<DesktopDatePicker
+									label="Start Date"
+									inputFormat="YYYY/MM"
+									value={formVal.startDate}
+									onChange={handleStartDateChange}
+									renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => <TextField {...params} />}
+								/>
+							</Box>
+							<Box>
+								<DesktopDatePicker
+									label="End Date"
+									inputFormat="YYYY/MM"
+									value={formVal.endDate}
+									onChange={handleEndDateChange}
+									renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => <TextField {...params} />}
+								/>
+							</Box>
+						</> : // Screen is small, use mobile date picker
+						<>
+							<Box sx={{ margin: '2em 0' }}>
+								<MobileDatePicker
+									label="Start Date"
+									inputFormat="YYYY/MM"
+									value={formVal.startDate}
+									onChange={handleStartDateChange}
+									renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => <TextField {...params} />}
+								/>
+							</Box>
+							<Box sx={{ margin: '2em 0' }}>
+								<MobileDatePicker
+									label="End Date"
+									inputFormat="YYYY/MM"
+									value={formVal.endDate}
+									onChange={handleEndDateChange}
+									renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => <TextField {...params} />}
+								/>
+							</Box>
+						</>
+					}
+				</FormControl>
+			</Box>
 		</div>
 	);
 }
 
-export function SalesGraph(props: { id: number, date: Date }) {
+export function SalesGraph(props: { id: number, startDate: Moment, endDate: Moment }) {
 	const [salesData, setSalesData] = React.useState([]);
+	let prod: Product;
+
 	useEffect(() => {
-		getSalesData({ m: String(props.date.getMonth), y: String(props.date.getFullYear) }, props.id)
-			.catch((reason) => {
-				window.alert
-					(`An error occured when I tried to get the sales data.
-Please ensure the server is running
-For advanced users: ${reason}`);
-				return [{ 0: 0 }]
-			})
-			.then((data) => setSalesData(
-				[{ x: data, y: props.date, }]));
-	}, [props.date, props.id]);
+		fetch(`/prods/${props.id}`)
+			.then(data => data.json() as unknown as Product)
+			.then(data => prod = data)
+
+		getSalesRange(props.startDate, props.endDate, props.id)
+			.then(data => setSalesData(data))
+	}, [props.startDate, props.endDate, props.id]);
 
 	return (
-		<Box>
-			{/* <ResponsiveLine
-				data={salesData}
-				margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
-				xScale={{ type: 'point' }}
-				yScale={{
-					type: 'linear',
-					min: 'auto',
-					max: 'auto',
-					stacked: true,
-					reverse: false
-				}}
-				axisBottom={{
-					tickSize: 5,
-					tickPadding: 5,
-					tickRotation: 0,
-					legend: 'Date',
-					legendOffset: 36,
-					legendPosition: 'middle'
-				}}
-				axisLeft={{
-					tickSize: 5,
-					tickPadding: 5,
-					tickRotation: 0,
-					legend: 'Sales',
-					legendOffset: -40,
-					legendPosition: 'middle'
-				}} /> */}
-			<ResponsiveContainer width='100%' height='100%'>
-				<BarChart
-					width={500}
-					height={300}
-					data={salesData}
-					margin={{
-						top: 5,
-						right: 30,
-						left: 20,
-						bottom: 5,
-					}}
-				>
-					<CartesianGrid strokeDasharray='3 3' />
-					<XAxis dataKey='name' />
-					<YAxis />
+		<Box sx={{ margin: '2.5 em 0' }}>
+			<ResponsiveContainer width="55%" height={400}>
+				<BarChart data={salesData}  >
+					<CartesianGrid strokeDasharray="3 3" />
+					<XAxis dataKey="salesDate" />
+					<YAxis dataKey='numberSold' />
 					<Tooltip />
 					<Legend />
-					<Bar dataKey='pv' fill='#8884d8' />
-					<Bar dataKey='uv' fill='#82ca9d' />
+					<Bar fill="#3874cb" dataKey="numberSold" />
 				</BarChart>
 			</ResponsiveContainer>
 		</Box>
 	);
+}
+
+const getSalesRange = async (start: Moment, end: Moment, id: number) => {
+	return await fetch(`/sales/${start.year()}/${start.month()}/to/${end.year()}/${end.month()}/${id}/`)
+		.then(data => data.json())
+		.then(data => data as unknown as { numberSold: number, salesDate: string, salesId: number }[])
 }
