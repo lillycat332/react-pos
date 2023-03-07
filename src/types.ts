@@ -56,7 +56,7 @@ const Just = <T>(value: T): Just<T> => ({
 
 export type ProductDisplay = {
 	p: Product
-	handler: Function | undefined
+	handler?: Function | undefined
 	currency: String
 }
 

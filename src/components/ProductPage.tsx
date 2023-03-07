@@ -141,7 +141,10 @@ For advanced users: ${err}`)
 				title='Products'
 				options={{
 					enableNestedDataAccess: '.',
-					onRowsDelete: (row: any) => { removeProduct(row, setProds); }
+					onRowsDelete: (rows: any) => {
+						const ps = rows.data.map(((row: any) => prods[row.dataIndex]));
+						ps.map((prod: any) => removeProduct(prod, setProds));
+					}
 				}} />
 			<Box className='bottom-right' onClick={() => { setOpen(true) }}>
 				<Fab color='primary' aria-label='add-user'>

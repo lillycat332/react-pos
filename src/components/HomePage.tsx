@@ -36,8 +36,6 @@ export default function HomePage(props: { cartChanger: Function, currencyType: C
 		return null
 	})
 
-
-
 	return (
 		<Masonry
 			columns={4}

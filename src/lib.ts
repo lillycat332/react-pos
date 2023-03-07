@@ -19,7 +19,7 @@ export const log = console.log.bind(console)
  * @param location a string representing the route to send the request to
  */
 export async function sendObject<A extends {}>(toSend: A, location: string) {
-	await fetch('${location}',
+	await fetch(`${location}`,
 		{
 			method: 'post',
 			body: JSON.stringify(toSend)

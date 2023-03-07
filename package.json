@@ -16,7 +16,7 @@
     "framer-motion": "^7.4.0",
     "moment": "^2.29.4",
     "mui-datatables": "^4.2.2",
-    "react": "^18.0.0",
+    "react": "^18.2.0",
     "react-dom": "^18.0.0",
     "react-parallax-tilt": "^1.7.67",
     "recharts": "^2.1.14",
@@ -26,7 +26,9 @@
   "scripts": {
     "bundle": "vite build",
     "watch": "vite build --watch --mode production",
-    "devWatch": "vite build  --watch --mode development"
+    "devWatch": "vite build  --watch --mode development",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "eslintConfig": {
     "extends": [
@@ -52,11 +54,14 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.1.1",
     "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^29.2.2",
     "@types/mui-datatables": "^3.7.9",
     "@types/react": "^18.0.7",
     "@types/react-dom": "^18.0.0",
     "@vitejs/plugin-react": "^2.1.0",
     "electron": "^21.1.1",
+    "jest": "^29.2.2",
+    "ts-jest": "^29.0.3",
     "vite": "^3.1.6",
     "vite-plugin-html": "^3.2.0"
   }

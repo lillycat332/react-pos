@@ -11,7 +11,7 @@ export default function App() {
   document.title = 'Triangle POS'
 
   // Programmatically set the favicon. I *could* have put it in the HTML,
-  // but this is more fun. Ah, JavaScript.
+  // but this is more fun.
   // Query for a link element with a relationship of 'icon'.
   var link = document.querySelector('link[rel~="icon"]');
   // If it doesn't exist, create it.

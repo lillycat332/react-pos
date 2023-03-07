@@ -14,7 +14,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import CartPage from './CartPage';
-import { ProductDisplay, Product, Currency, GBP } from '../types';
+import { Product, Currency, GBP } from '../types';
 import { fetchProds, makeSale, purge, getToken, setToken, fetchProdsWithStock } from '../lib';
 import Login from './Login';
 

@@ -45,7 +45,7 @@ export default function UsersPage(props: { priv: number }) {
 		event.stopPropagation()
 		try {
 			let response =
-				await fetch(`${global.window.location.href}users`, {
+				await fetch(`${window.location.href}users`, {
 					method: 'post',
 					body: JSON.stringify(formVal)
 				})
